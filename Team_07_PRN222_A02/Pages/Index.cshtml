@@ -1,0 +1,15 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@if (Model.news.Any())
+{
+    <partial name="News/NewestNew" model="Model.news.Take(5).ToList()" />
+    <section class="section">
+        <div class="container">
+            <partial name="News/NewsByCategory" model="Model.news.Skip(5).ToList()" />
+        </div><!-- end container -->
+    </section>
+}
