@@ -116,18 +116,20 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 
-                                        @* @if (userRole == "Staff") *@
-                                        @* { *@
-                                        @*     <a class="dropdown-item" asp-controller="Category" asp-action="Index">Manage Category</a> *@
-                                        @*     <a class="dropdown-item" asp-controller="Profile" asp-action="Index">Go to My Profile</a> *@
-                                        @*     <a class="dropdown-item" asp-controller="News" asp-action="ManageNews">Manage News</a> *@
-                                        @* } *@
-                                        @* @if(userRole == "Admin") *@
-                                        @* { *@
-                                        @*     <a class="dropdown-item" asp-controller="ManageAccount" asp-action="AllAccount">Manage Account</a> *@
-                                        @*     <a class="dropdown-item" asp-controller="News" asp-action="ManageNews">Manage News</a> *@
-                                        @* } *@
-                                        @* <div class="dropdown-divider"></div> *@
+                                        @if (userRole == "Staff")
+                                        {
+                                            <a class="dropdown-item" asp-controller="Category" asp-action="Index">Manage Category</a>
+                                            <a class="dropdown-item" asp-controller="Profile" asp-action="Index">Go to My Profile</a>
+                                            <a class="dropdown-item" asp-controller="News" asp-action="ManageNews">Manage News</a>
+                                        }
+
+                                        @if (userRole == "Admin")
+                                        {
+                                            <a class="dropdown-item" asp-page="AdminPage/ManageAccount">Manage Account</a>
+                                        }
+
+                                        <div class="dropdown-divider"></div>
+
                                         <a class="dropdown-item text-danger d-flex align-items-center" asp-page="Authentication/Login" asp-page-handler="Logout">
                                             <img src="~/images/logout.png" style="height: 20px; width: 20px; margin-right: 8px;" /> Logout
                                         </a>
