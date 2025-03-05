@@ -1,0 +1,21 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@if (Model.news.Any())
+{
+    <partial name="News/NewestNew" model="Model.news.Take(5).ToList()" />
+
+    <section class="section">
+        <div class="container">
+            <partial name="News/NewsByCategory" model="Model.news.Skip(5).ToList()" />
+
+            <!-- Thêm nút 'Xem báo cáo' -->
+            <div class="text-center mt-4">
+                <a asp-page="/Report" class="btn btn-warning">📊 Xem báo cáo</a>
+            </div>
+        </div><!-- end container -->
+    </section>
+}

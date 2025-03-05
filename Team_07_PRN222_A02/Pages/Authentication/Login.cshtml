@@ -1,0 +1,53 @@
+﻿@page
+@model Team_07_PRN222_A02.Pages.Authentication.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="page-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <h2><i class="fa fa-envelope-o"></i>LOGIN</h2>
+            </div><!-- end col -->
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Login</a></li>
+                </ol>
+            </div><!-- end col -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</div><!-- end page-title -->
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <div class="page-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <blockquote class="blockquote">Please read <a href="#">Licensing & Terms</a> of Use if you are wondering about the license.</blockquote>
+                        </div>
+                    </div><!-- end row -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form asp-action="Login" class="form-wrapper" asp-route-returnurl="@ViewData["ReturnUrl"]">
+                                @* <div class="text-danger" asp-validation-summary="ModelOnly"></div> *@
+                                <h4>Login Form</h4>
+                                <label asp-for="@Model.login.Email"></label><sup>*</sup>
+                                <input asp-for="@Model.login.Email" type="text" class="form-control" placeholder="Email">
+                                <div><span asp-validation-for="@Model.login.Email" class="text-danger"></span></div>
+                                <label asp-for="@Model.login.Password"></label><sup>*</sup>
+                                <input asp-for="@Model.login.Password" class="form-control" type="password" placeholder="Password" />
+                                <div><span asp-validation-for="@Model.login.Password" class="text-danger"></span></div>
+                                <button type="submit" class="btn btn-primary">Login <i class="fa fa-envelope-open-o"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div><!-- end page-wrapper -->
+            </div><!-- end col -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section>
