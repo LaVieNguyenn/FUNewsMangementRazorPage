@@ -22,7 +22,7 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
 
         public  IQueryable<SystemAccount> GetAllAsync()
         {
-           throw new NotImplementedException();
+            return _context.SystemAccounts.AsQueryable();
         }
 
         public async Task<SystemAccount?> GetByIdAsync(int obj) => await _context.SystemAccounts.FirstOrDefaultAsync(a => a.AccountId == obj);
@@ -34,5 +34,6 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 
         public async Task UpdateAsync(SystemAccount obj) => _context.SystemAccounts.Update(obj);
+
     }                                                                                                                                    
 }

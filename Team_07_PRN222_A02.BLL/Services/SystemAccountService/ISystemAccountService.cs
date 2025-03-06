@@ -19,6 +19,6 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
         Task UpdateProfileAsync(SystemAccount account); // cap nhat ho so
         Task<SystemAccount> GetAccountWithNewsHistoryAsync(string email);
         Task AddAccount(SystemAccountDTOAdd model);
-
+        Task<List<SystemAccountDTO>> GetAllAccountsAsync();
     }
 }

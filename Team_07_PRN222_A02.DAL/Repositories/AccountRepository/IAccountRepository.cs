@@ -10,5 +10,7 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
         public interface IAccountRepository : IGenericRepository<SystemAccount>
         {
             Task<SystemAccount?> LoginAsync(string username, string password);
+            IQueryable<SystemAccount> GetAllAsync();
+
         }
 }

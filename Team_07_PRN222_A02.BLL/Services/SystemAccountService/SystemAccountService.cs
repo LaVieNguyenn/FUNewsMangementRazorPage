@@ -3,6 +3,7 @@ using Team_07_PRN222_A02.DAL.Models;
 using Team_07_PRN222_A02.DAL.Repositories.AccountRepository;
 using Team_07_PRN222_A02.DAL.UnitOfWork;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
 {
@@ -66,6 +67,19 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
         {
             throw new NotImplementedException();
         }
+        public async Task<List<SystemAccountDTO>> GetAllAccountsAsync()
+        {
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync().ToListAsync();
+
+            return accounts.Select(a => new SystemAccountDTO
+            {
+                AccountID = a.AccountId,
+                AccountName = a.AccountName,
+                AccountEmail = a.AccountEmail,
+                AccountRole = a.AccountRole
+            }).ToList(); 
+        }
+
     }
 }
         
