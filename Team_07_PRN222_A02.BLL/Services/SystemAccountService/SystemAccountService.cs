@@ -52,16 +52,55 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
             throw new NotImplementedException();
             // return _repository.GetAccountWithNewsHistoryAsync(email);
         }
-
-        Task ISystemAccountService.UpdateAccount(SystemAccount model)
+        public async Task<SystemAccountDTO> GetAccountByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(id);
+            if (account == null)
+            {
+                return null;
+            }
+            return new SystemAccountDTO
+            {
+                AccountID = account.AccountId,
+                AccountName = account.AccountName,
+                AccountEmail = account.AccountEmail,
+                AccountRole = account.AccountRole,
+            };
+        }
+
+        public async Task<bool> UpdateAccountAsync(SystemAccountDTO model)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(model.AccountID);
+            if (account == null)
+            {
+                return false; 
+            }
+
+            account.AccountName = model.AccountName;
+            account.AccountEmail = model.AccountEmail;
+            account.AccountRole = model.AccountRole;
+
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            await _unitOfWork.SaveChangesAsync();
+            return true; 
         }
 
         Task ISystemAccountService.DeleteAccount(int accountId)
         {
             throw new NotImplementedException();
         }
+        public async Task<bool> DeleteAccountAsync(int accountId)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(accountId);
+            if (account == null)
+            {
+                return false;
+            }
+
+            await _unitOfWork.AccountRepository.DeleteAsync(account);
+            return await _unitOfWork.SaveChangesAsync() > 0; 
+        }
+
 
         Task ISystemAccountService.AddAccount(SystemAccountDTOAdd model)
         {
@@ -79,6 +118,27 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
                 AccountRole = a.AccountRole
             }).ToList(); 
         }
+        public async Task<bool> CreateAccountAsync(SystemAccountDTOAdd model)
+        {
+            var existingAccount = await _unitOfWork.AccountRepository.GetByEmailAsync(model.AccountEmail);
+            if (existingAccount != null)
+            {
+                return false;
+            }
+
+            var account = new SystemAccount
+            {
+                AccountName = model.AccountName,
+                AccountEmail = model.AccountEmail,
+                AccountPassword = model.AccountPassword,
+                AccountRole = model.AccountRole
+            };
+
+            await _unitOfWork.AccountRepository.InsertAsync(account);
+            return await _unitOfWork.SaveChangesAsync() > 0;
+
+        }
+
 
     }
 }
