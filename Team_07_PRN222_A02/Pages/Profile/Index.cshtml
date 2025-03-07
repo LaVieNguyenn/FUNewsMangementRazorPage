@@ -1,0 +1,28 @@
+﻿@page
+@model Team_07_PRN222_A02.Pages.Profile.IndexModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2>My Profile</h2>
+
+@if (Model.Profile != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">@Model.Profile.AccountName</h4>
+            <p class="card-text">
+                <strong>Email:</strong> @Model.Profile.AccountEmail <br />
+                <strong>Role:</strong> @(Model.Profile.AccountRole == 1 ? "Staff" : "Other") <br />
+                <strong>Account ID:</strong> @Model.Profile.AccountId
+            </p>
+
+            <a asp-page="Edit" class="btn btn-primary">Edit Profile</a>
+            <a asp-page="NewsHistory" class="btn btn-info">View News History</a>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-danger">Profile not found.</p>
+}

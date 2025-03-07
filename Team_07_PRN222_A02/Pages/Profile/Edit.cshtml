@@ -1,0 +1,27 @@
+﻿@page
+@model Team_07_PRN222_A02.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h2>Edit Profile</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="AccountName">Name</label>
+        <input type="text" asp-for="Profile.AccountName" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="AccountEmail">Email</label>
+        <input type="email" asp-for="Profile.AccountEmail" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="AccountPassword">New Password</label>
+        <input type="password" asp-for="Profile.AccountPassword" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
