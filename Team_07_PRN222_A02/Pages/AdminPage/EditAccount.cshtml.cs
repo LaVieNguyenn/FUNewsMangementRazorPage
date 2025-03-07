@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Team_07_PRN222_A02.BLL.DTOs;
@@ -6,6 +7,7 @@ using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
 
 namespace Team_07_PRN222_A02.Pages.AdminPage
 {
+    [Authorize(Roles = "Admin")]
     public class EditAccountModel : PageModel
     {
         private readonly ISystemAccountService _services;
