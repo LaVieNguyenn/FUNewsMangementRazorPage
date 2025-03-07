@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
 {
@@ -41,6 +42,12 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
         public Task UpdateAsync(NewsArticle obj)
         {
             throw new NotImplementedException();
+        }
+        public async Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId)
+        {
+            return await _context.NewsArticles
+                .Where(n => n.CreatedById == authorId)
+                .ToListAsync();
         }
     }
 }

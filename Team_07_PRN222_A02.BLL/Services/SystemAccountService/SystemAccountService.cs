@@ -3,7 +3,6 @@ using Team_07_PRN222_A02.DAL.Models;
 using Team_07_PRN222_A02.DAL.Repositories.AccountRepository;
 using Team_07_PRN222_A02.DAL.UnitOfWork;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
 
 namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
 {
@@ -24,33 +23,29 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
             if (this.Admin.AccountEmail == email && this.Admin.AccountPassword == password)
             {
                 return this.Admin;
-            }else
-            return await _unitOfWork.AccountRepository.LoginAsync(email, password);
+            }
+            else
+                return await _unitOfWork.AccountRepository.LoginAsync(email, password);
         }
 
-        
-        public async Task<SystemAccount> GetAccountById (int accountID) => await _unitOfWork.AccountRepository.GetByIdAsync(accountID);
+
+        public async Task<SystemAccount> GetAccountById(int accountID) => await _unitOfWork.AccountRepository.GetByIdAsync(accountID);
 
         public async Task<IEnumerable<SystemAccount>> GetAllAccounts() => throw new NotImplementedException();
-        
 
-        public Task<SystemAccount?> GetAccountByEmailAsync(string email) // lay tk theo email
+        public async Task<SystemAccount?> GetAccountByEmailAsync(string email)
         {
-            throw new NotImplementedException();
-            // return _repository.GetAccountByEmailAsync(email);
+            return await _unitOfWork.AccountRepository.GetAccountByEmailAsync(email);
+        }
+        public async Task<SystemAccount?> GetAccountWithNewsHistoryAsync(string email)
+        {
+            return await _unitOfWork.AccountRepository.GetAccountByEmailAsync(email);
         }
 
-        public Task UpdateProfileAsync(SystemAccount account) // cap nhat tk
+        public async Task UpdateProfileAsync(SystemAccount account)
         {
-            throw new NotImplementedException();
-
-            // return _repository.UpdateAccountAsync(account);
-        }
-
-        public Task<SystemAccount> GetAccountWithNewsHistoryAsync(string email)
-        {
-            throw new NotImplementedException();
-            // return _repository.GetAccountWithNewsHistoryAsync(email);
+            await _unitOfWork.AccountRepository.UpdateAccountAsync(account);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         Task ISystemAccountService.UpdateAccount(SystemAccount model)
@@ -67,19 +62,10 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
         {
             throw new NotImplementedException();
         }
-        public async Task<List<SystemAccountDTO>> GetAllAccountsAsync()
+
+        public Task<List<SystemAccountDTO>> GetAllAccountsAsync()
         {
-            var accounts = await _unitOfWork.AccountRepository.GetAllAsync().ToListAsync();
-
-            return accounts.Select(a => new SystemAccountDTO
-            {
-                AccountID = a.AccountId,
-                AccountName = a.AccountName,
-                AccountEmail = a.AccountEmail,
-                AccountRole = a.AccountRole
-            }).ToList(); 
+            throw new NotImplementedException();
         }
-
     }
 }
-        

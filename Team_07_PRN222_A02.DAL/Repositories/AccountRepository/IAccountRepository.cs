@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
 {
-        public interface IAccountRepository : IGenericRepository<SystemAccount>
-        {
-            Task<SystemAccount?> LoginAsync(string username, string password);
-            IQueryable<SystemAccount> GetAllAsync();
-
-        }
+    public interface IAccountRepository : IGenericRepository<SystemAccount>
+    {
+        Task<SystemAccount?> LoginAsync(string username, string password);
+        Task<SystemAccount?> GetAccountByEmailAsync(string email);
+        Task<SystemAccount> GetAccountById(int accountID);
+        Task UpdateAccountAsync(SystemAccount account);
+    }
 }

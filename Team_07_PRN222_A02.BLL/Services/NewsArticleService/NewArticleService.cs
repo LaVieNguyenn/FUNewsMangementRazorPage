@@ -58,5 +58,12 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
         {
             throw new NotImplementedException();
         }
+        public async Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId)
+        {
+            return await _unitOfWork.NewsArticleRepository
+                .GetAllAsync()
+                .Where(n => n.CreatedById == authorId)
+                .ToListAsync();
+        }
     }
 }
