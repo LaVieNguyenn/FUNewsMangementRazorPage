@@ -173,18 +173,29 @@
                     <td>@category.ParentCategoryID</td>
                     <td>@category.IsActive</td>
                     <td>
-                        <button class="btn btn-warning" onclick="openEditModal('@category.CategoryID', '@category.Name', '@category.CategoryDescription', '@category.ParentCategoryID', '@category.IsActive')">
+                        <button class="btn btn-warning btn-sm" onclick="openEditModal('@category.CategoryID', '@category.Name', '@category.CategoryDescription', '@category.ParentCategoryID', '@category.IsActive')">
                             ✏️ Edit
                         </button>
                         <form method="post">
-                            <form method="post">
+                            @if (!Model.Categories.Any(c => c.ParentCategoryID == category.CategoryID) &&
+                           !Model.NewsArticles.Any(n => n.CategoryID == category.CategoryID.ToString()))
+                            {
                                 <button type="submit" asp-page-handler="Delete" asp-route-id="@category.CategoryID"
-                                        class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure?');">
                                     🗑 Delete
                                 </button>
-                            </form>
-
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="btn btn-secondary disabled btn-sm"
+                                        title="Cannot delete category with subcategories or linked news articles.">
+                                    🗑 Delete
+                                </button>
+                            }
                         </form>
+
                     </td>
                 </tr>
 
@@ -199,12 +210,12 @@
                             <td>@subCategory.ParentCategoryID</td>
                             <td>@subCategory.IsActive</td>
                             <td>
-                                <button class="btn btn-warning" onclick="openEditModal('@subCategory.CategoryID', '@subCategory.Name', '@subCategory.CategoryDescription', '@subCategory.ParentCategoryID', '@subCategory.IsActive')">
+                                <button class="btn btn-warning btn-sm" onclick="openEditModal('@subCategory.CategoryID', '@subCategory.Name', '@subCategory.CategoryDescription', '@subCategory.ParentCategoryID', '@subCategory.IsActive')">
                                     ✏️ Edit
                                 </button>
                                 <form method="post">
                                     <button type="submit" asp-page-handler="Delete" asp-route-id="@subCategory.CategoryID"
-                                            class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                                            class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
                                         🗑 Delete
                                     </button>
                                 </form>
