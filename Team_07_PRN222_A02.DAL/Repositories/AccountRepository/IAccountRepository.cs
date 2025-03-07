@@ -13,5 +13,6 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
         Task<SystemAccount?> GetAccountByEmailAsync(string email);
         Task<SystemAccount> GetAccountById(int accountID);
         Task UpdateAccountAsync(SystemAccount account);
+        IQueryable<SystemAccount> GetAllAsync();
     }
 }
