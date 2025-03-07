@@ -16,28 +16,53 @@ namespace Team_07_PRN222_A02.DAL.Repositories.CategoryRepository
             _context = funewsManagementContext;
         }
 
-        public async Task DeleteAsync(Category obj) =>  _context.Categories.Remove(obj);
+        public async Task DeleteAsync(Category obj)
+        {
+            if (obj == null)
+            {
+                throw new ArgumentNullException(nameof(obj), "Category cannot be null.");
+            }
+
+            _context.Categories.Remove(obj);
+            await _context.SaveChangesAsync();
+        }
 
         public IQueryable<Category> GetAllAsync() => _context.Categories.AsQueryable();
 
-        public Task<Category?> GetByIdAsync(int obj)
+        public async Task<Category?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Categories.FindAsync(id);
         }
 
-        public Task InsertAsync(Category obj)
+
+        public async Task InsertAsync(Category obj)
         {
-            throw new NotImplementedException();
+            if (obj == null)
+            {
+                throw new ArgumentNullException(nameof(obj), "Category cannot be null.");
+            }
+
+            await _context.Categories.AddAsync(obj); 
+            await _context.SaveChangesAsync(); 
+
         }
 
-        public Task<int> SaveChangesAsync()
+
+        public async Task<int> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(Category obj)
+
+        public async Task UpdateAsync(Category obj)
         {
-            throw new NotImplementedException();
+            if (obj == null)
+            {
+                throw new ArgumentNullException(nameof(obj), "Category cannot be null.");
+            }
+
+             _context.Categories.Update(obj);
         }
+
     }
 }

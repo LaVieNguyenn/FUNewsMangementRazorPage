@@ -62,7 +62,10 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            if (_context == null) throw new InvalidOperationException("DbContext is null");
+
+            return await _context.SaveChangesAsync(); // ✅ Chỉ gọi SaveChangesAsync() duy nhất một lần
         }
+
     }
 }

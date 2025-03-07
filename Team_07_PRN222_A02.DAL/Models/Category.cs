@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿    using System;
+    using System.Collections.Generic;
 
-namespace Team_07_PRN222_A02.DAL.Models;
+    namespace Team_07_PRN222_A02.DAL.Models;
 
-public partial class Category
-{
-    public int CategoryId { get; set; }
+    public partial class Category
+    {
+        public int CategoryId { get; set; }
 
-    public string CategoryName { get; set; } = null!;
+        public string CategoryName { get; set; } = null!;
 
-    public string? CategoryDescription { get; set; }
+        public string? CategoryDescription { get; set; }
 
-    public int? ParentCategoryId { get; set; }
+        public int? ParentCategoryId { get; set; }
 
-    public byte IsActive { get; set; }
+        public byte IsActive { get; set; }
 
-    public virtual ICollection<Category> InverseParentCategory { get; set; } = new List<Category>();
+        public virtual ICollection<Category> InverseParentCategory { get; set; } = new List<Category>();
 
-    public virtual ICollection<NewsArticle> NewsArticles { get; set; } = new List<NewsArticle>();
+        public virtual ICollection<NewsArticle> NewsArticles { get; set; } = new List<NewsArticle>();
 
-    public virtual Category? ParentCategory { get; set; }
-}
+        public virtual Category? ParentCategory { get; set; }
+    }
