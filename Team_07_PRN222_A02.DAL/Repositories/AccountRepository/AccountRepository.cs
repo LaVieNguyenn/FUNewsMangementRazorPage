@@ -34,6 +34,17 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 
         public async Task UpdateAsync(SystemAccount obj) => _context.SystemAccounts.Update(obj);
+        public async Task UpdateAccount(SystemAccount obj)                                                                          
+        {
+            _context.SystemAccounts.Update(obj);
+            await _context.SaveChangesAsync(); 
+        }
+        public async Task<SystemAccount?> GetByEmailAsync(string email)
+        {
+            return await _context.SystemAccounts
+                                 .FirstOrDefaultAsync(a => a.AccountEmail == email);
+        }
 
-    }                                                                                                                                    
+
+    }
 }

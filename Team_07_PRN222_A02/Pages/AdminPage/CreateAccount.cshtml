@@ -1,0 +1,67 @@
+﻿@page
+@model Team_07_PRN222_A02.Pages.AdminPage.CreateAccountModel
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Create New Account</h2>
+
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" asp-for="Account.AccountName" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" asp-for="Account.AccountEmail" required />
+            <span class="text-danger" asp-validation-for="Account.AccountEmail"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="text" class="form-control" asp-for="Account.AccountPassword" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select class="form-select" asp-for="Account.AccountRole">
+                <option value="1">Staff</option>
+                <option value="2">Lecturer</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-custom btn-save">
+            <i class="fas fa-save"></i> Create Account
+        </button>
+        <a asp-page="ManageAccount" class="btn btn-custom btn-cancel">Cancel</a>
+    </form>
+</div>
+<style>
+    .btn-custom {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-save {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+</style>

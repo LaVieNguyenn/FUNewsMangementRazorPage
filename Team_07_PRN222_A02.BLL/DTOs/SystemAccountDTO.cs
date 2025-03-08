@@ -18,8 +18,8 @@ namespace Team_07_PRN222_A02.BLL.DTOs
     {
         public string AccountName { get; set; }
         public string AccountEmail { get; set; }
-        public string AccountRole { get; set; }
-        public string AccountPassword { get; set; }
+        public byte AccountRole { get; set; }
+        public string? AccountPassword { get; set; }
 
     }
 
