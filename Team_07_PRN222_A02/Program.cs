@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Team_07_PRN222_A02.BLL.Mapping;
+using Team_07_PRN222_A02.BLL.Services;
 using Team_07_PRN222_A02.BLL.Services.CategoryService;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
@@ -22,6 +23,7 @@ namespace Team_07_PRN222_A02
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionStringDB")));
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<IReportService, ReportService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
