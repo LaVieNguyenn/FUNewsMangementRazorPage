@@ -69,7 +69,6 @@
                 Console.WriteLine($"IsActive: {NewCategory.IsActive}");
 
 
-
             await _categoryService.CreateCategoryAsync(NewCategory);
             TempData["SuccessMessage"] = "✅ Category added successfully!";
             return RedirectToPage();
