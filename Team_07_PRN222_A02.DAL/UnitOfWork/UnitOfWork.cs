@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Team_07_PRN222_A02.DAL.UnitOfWork
 {
@@ -17,13 +18,11 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
         private IAccountRepository? _accountRepository;
         private INewsRepository? _newArticleRepository;
         private ICategoryRepository? _categoryRepository;
-
+        private bool disposed = false;
         public UnitOfWork(FunewsManagementContext context)
         {
             _context = context;
         }
-
-
         public IAccountRepository AccountRepository
         {
             get
@@ -35,7 +34,6 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
                 return _accountRepository;
             }
         }
-
         public INewsRepository NewsArticleRepository
         {
             get
@@ -47,7 +45,6 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
                 return _newArticleRepository;
             }
         }
-
         public ICategoryRepository CategoryRepository
         {
             get
@@ -59,10 +56,39 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
                 return _categoryRepository;
             }
         }
-
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        public void BeginTransaction()
+        {
+            _context.Database.BeginTransaction();
+        }
+
+        public void CommitTransaction()
+        {
+            _context.Database.CommitTransaction();
+        }
+
+        public void RollBack()
+        {
+            _context.Database.RollbackTransaction();
         }
     }
 }
