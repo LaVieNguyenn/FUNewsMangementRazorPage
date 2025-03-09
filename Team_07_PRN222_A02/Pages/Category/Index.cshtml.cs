@@ -59,7 +59,8 @@
                 // Gán thủ công giá trị vào CategoryName
                 if (string.IsNullOrWhiteSpace(NewCategory.CategoryName))
                 {
-                    NewCategory.CategoryName = "DefaultCategory";  // Hoặc giá trị nào đó hợp lý
+                TempData["ErrorMessage"] = "⚠ Category Name cannot be empty!";
+                NewCategory.CategoryName = "DefaultCategory";  // Hoặc giá trị nào đó hợp lý
                 }
 
                 Console.WriteLine($"Category Name: {NewCategory.CategoryName}");
@@ -70,7 +71,8 @@
 
 
             await _categoryService.CreateCategoryAsync(NewCategory);
-                return RedirectToPage();
+            TempData["SuccessMessage"] = "✅ Category added successfully!";
+            return RedirectToPage();
             }
 
 
@@ -78,22 +80,23 @@
             {
                 if (!ModelState.IsValid)
                 {
-                
-                    ParentCategories = new SelectList(Categories, "CategoryId", "CategoryName");
-                    return Page();
+                TempData["ErrorMessage"] = "⚠ Invalid Data! Please check your inputs.";
+                ParentCategories = new SelectList(Categories, "CategoryId", "CategoryName");
+                return Page();
                 }
 
                 if (EditCategory == null)
                 {
-                    Console.WriteLine("❌ EditCategory is NULL!");
+                TempData["ErrorMessage"] = "❌ No category selected for editing!";
+                Console.WriteLine("❌ EditCategory is NULL!");
                     return Page();
                 }
 
            Console.WriteLine($"🔄 Updating category: {EditCategory.CategoryId} - {EditCategory.CategoryName}");
                 await _categoryService.UpdateCategoryAsync(EditCategory);
+            TempData["SuccessMessage"] = "✏️ Category updated successfully!";
 
-
-                return RedirectToPage(); // Chuyển trang để tránh reload lỗi
+            return RedirectToPage(); // Chuyển trang để tránh reload lỗi
             }
 
 
@@ -103,6 +106,7 @@
             if (id <= 0)
             {
                 ModelState.AddModelError(string.Empty, "Invalid category ID.");
+                TempData["ErrorMessage"] = "❌ Invalid category ID!";
                 return Page();
             }
 
@@ -110,6 +114,7 @@
             if (category == null)
             {
                 ModelState.AddModelError(string.Empty, "Category not found.");
+                TempData["ErrorMessage"] = "⚠ Category not found!";
                 return Page();
             }
 
@@ -119,18 +124,20 @@
 
             if (isInUse)
             {
-                ModelState.AddModelError(string.Empty, "Cannot delete this category because it is being used in news articles.");
+                TempData["ErrorMessage"] = "🚫 Cannot delete this category because it is linked to news articles!";
                 return Page(); // Trả về trang hiện tại, không xóa
             }
 
             await _categoryService.DeleteCategoryAsync(id);
+            TempData["SuccessMessage"] = "🗑 Category deleted successfully!";
             return RedirectToPage("Index");
         }
 
 
         public async Task<IActionResult> OnGetNewArticle()
             {
-                var category = await _newsArticleService.GetAllNewestNewsAsync();
+            TempData["InfoMessage"] = "🔍 Fetching latest news articles...";
+            var category = await _newsArticleService.GetAllNewestNewsAsync();
                 return RedirectToPage("Index");
             }
         }

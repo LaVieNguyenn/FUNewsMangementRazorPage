@@ -1,4 +1,4 @@
-﻿@page
+﻿@page   
 @model Team_07_PRN222_A02.Pages.Category.IndexModel
 @{
     @if (Model.Categories != null && Model.Categories.Any())
@@ -12,13 +12,16 @@
     }
 
     var categoryOptions = Model.Categories
-        .Select(c => $"<option value='{c.CategoryID}'>{c.CategoryName}</option>")
-        .Aggregate((a, b) => a + b);
+    .Where(c => c.ParentCategoryID == null) // Chỉ lấy category gốc
+    .Select(c => $"<option value='{c.CategoryID}'>{c.CategoryName}</option>")
+    .Aggregate((a, b) => a + b);
+
 }
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+<link rel="stylesheet" href="~/css/Toast.css" asp-append-version="true" />
 <script>
     function toggleChildren(parentId) {
         let rows = document.querySelectorAll(`tr[data-parent-id='${parentId}']`);
@@ -54,7 +57,58 @@
         let form = document.getElementById("addCategoryForm");
         form.style.display = form.style.display === "none" ? "block" : "none";
     }
+      function showToast(message, type = 'success') {
+        let toastContainer = document.getElementById('toast-container');
+        let toast = document.createElement('div');
+        toast.classList.add('toast', `toast-${type}`);
+        toast.innerHTML = `${message} <div class='toast-progress'></div>`;
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>showToast('@TempData["SuccessMessage"]', 'success');</text>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <text>showToast('@TempData["ErrorMessage"]', 'error');</text>
+    }
+    });
+
+          document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("loading-overlay").style.display = "none";
+    });
+
+    $("form").on("submit", function (event) {
+        let form = $(this);
+        $.ajax({
+            type: form.attr("method"),
+            url: form.attr("action"),
+            data: form.serialize(),
+            success: function () {
+                document.getElementById("loading-overlay").style.display = "none";
+            },
+            error: function () {
+                document.getElementById("loading-overlay").style.display = "none";
+            }
+        });
+    });
+
 </script>
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
 <h2>Category Management</h2>
 
 <button class="btn btn-primary" onclick="toggleAddCategoryForm()">➕ Add New Category</button>
@@ -179,29 +233,31 @@
                     <td>@category.ParentCategoryID</td>
                     <td>@category.IsActive</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="openEditModal('@category.CategoryID', '@category.Name', '@category.CategoryDescription', '@category.ParentCategoryID', '@category.IsActive')">
-                            ✏️ Edit
-                        </button>
-                        <form method="post">
-                            @if (!Model.Categories.Any(c => c.ParentCategoryID == category.CategoryID) &&
-                           !Model.NewsArticles.Any(n => n.CategoryId == category.CategoryID.ToString()))
-                            {
-                                <button type="submit" asp-page-handler="Delete" asp-route-id="@category.CategoryID"
-                                        class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Are you sure?');">
-                                    🗑 Delete
-                                </button>
-                            }
-                            else
-                            {
-                                <button type="button"
-                                        class="btn btn-secondary disabled btn-sm"
-                                        title="Cannot delete category with subcategories or linked news articles.">
-                                    🗑 Delete
-                                </button>
-                            }
-                        </form>
-
+                        <div class="d-flex flex-column align-items-start">
+                            <button class="btn btn-warning btn-sm w-auto"
+                                    onclick="openEditModal('@category.CategoryID', '@category.Name', '@category.CategoryDescription', '@category.ParentCategoryID', '@category.IsActive')">
+                                ✏️ Edit
+                            </button>
+                            <form method="post">
+                                @if (!Model.Categories.Any(c => c.ParentCategoryID == category.CategoryID) &&
+                               !Model.NewsArticles.Any(n => n.CategoryId == category.CategoryID.ToString()))
+                                {
+                                    <button type="submit" asp-page-handler="Delete" asp-route-id="@category.CategoryID"
+                                            class="btn btn-danger btn-sm w-auto mt-1"
+                                            onclick="return confirm('Are you sure?');">
+                                        🗑 Delete
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button"
+                                            class="btn btn-secondary disabled btn-sm w-auto mt-1"
+                                            title="Cannot delete category with subcategories or linked news articles.">
+                                        🗑 Delete
+                                    </button>
+                                }
+                            </form>
+                        </div>
                     </td>
                 </tr>
 
@@ -220,10 +276,21 @@
                                     ✏️ Edit
                                 </button>
                                 <form method="post">
-                                    <button type="submit" asp-page-handler="Delete" asp-route-id="@subCategory.CategoryID"
-                                            class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
-                                        🗑 Delete
-                                    </button>
+                                    @if (!Model.NewsArticles.Any(n => n.CategoryId == subCategory.CategoryID.ToString()))
+                                    {
+                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@subCategory.CategoryID"
+                                                class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+                                            🗑 Delete
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="btn btn-secondary disabled btn-sm"
+                                                title="Cannot delete category because it's linked to a news article.">
+                                            🗑 Delete
+                                        </button>
+                                    }
                                 </form>
 
                             </td>
