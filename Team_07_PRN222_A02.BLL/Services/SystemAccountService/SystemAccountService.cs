@@ -3,6 +3,7 @@ using Team_07_PRN222_A02.DAL.Models;
 using Team_07_PRN222_A02.DAL.Repositories.AccountRepository;
 using Team_07_PRN222_A02.DAL.UnitOfWork;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
 {
@@ -23,49 +24,116 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
             if (this.Admin.AccountEmail == email && this.Admin.AccountPassword == password)
             {
                 return this.Admin;
-            }else
-            return await _unitOfWork.AccountRepository.LoginAsync(email, password);
+            }
+            else
+                return await _unitOfWork.AccountRepository.LoginAsync(email, password);
         }
 
-        
-        public async Task<SystemAccount> GetAccountById (int accountID) => await _unitOfWork.AccountRepository.GetByIdAsync(accountID);
+
+        public async Task<SystemAccount> GetAccountById(int accountID) => await _unitOfWork.AccountRepository.GetByIdAsync(accountID);
 
         public async Task<IEnumerable<SystemAccount>> GetAllAccounts() => throw new NotImplementedException();
-        
 
-        public Task<SystemAccount?> GetAccountByEmailAsync(string email) // lay tk theo email
+        public async Task<SystemAccount?> GetAccountByEmailAsync(string email)
         {
-            throw new NotImplementedException();
-            // return _repository.GetAccountByEmailAsync(email);
+            return await _unitOfWork.AccountRepository.GetAccountByEmailAsync(email);
+        }
+        public async Task<SystemAccount?> GetAccountWithNewsHistoryAsync(string email)
+        {
+            return await _unitOfWork.AccountRepository.GetAccountByEmailAsync(email);
         }
 
-        public Task UpdateProfileAsync(SystemAccount account) // cap nhat tk
+        public async Task UpdateProfileAsync(SystemAccount account)
         {
-            throw new NotImplementedException();
-
-            // return _repository.UpdateAccountAsync(account);
+            await _unitOfWork.AccountRepository.UpdateAccountAsync(account);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<SystemAccountDTO> GetAccountByIdAsync(int id)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(id);
+            if (account == null)
+            {
+                return null;
+            }
+            return new SystemAccountDTO
+            {
+                AccountID = account.AccountId,
+                AccountName = account.AccountName,
+                AccountEmail = account.AccountEmail,
+                AccountRole = account.AccountRole,
+            };
         }
 
-        public Task<SystemAccount> GetAccountWithNewsHistoryAsync(string email)
+        public async Task<bool> UpdateAccountAsync(SystemAccountDTO model)
         {
-            throw new NotImplementedException();
-            // return _repository.GetAccountWithNewsHistoryAsync(email);
-        }
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(model.AccountID);
+            if (account == null)
+            {
+                return false; 
+            }
 
-        Task ISystemAccountService.UpdateAccount(SystemAccount model)
-        {
-            throw new NotImplementedException();
+            account.AccountName = model.AccountName;
+            account.AccountEmail = model.AccountEmail;
+            account.AccountRole = model.AccountRole;
+
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            await _unitOfWork.SaveChangesAsync();
+            return true; 
         }
 
         Task ISystemAccountService.DeleteAccount(int accountId)
         {
             throw new NotImplementedException();
         }
+        public async Task<bool> DeleteAccountAsync(int accountId)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(accountId);
+            if (account == null)
+            {
+                return false;
+            }
+
+            await _unitOfWork.AccountRepository.DeleteAsync(account);
+            return await _unitOfWork.SaveChangesAsync() > 0; 
+        }
+
 
         Task ISystemAccountService.AddAccount(SystemAccountDTOAdd model)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<SystemAccountDTO>> GetAllAccountsAsync()
+        {
+            var accounts = await _unitOfWork.AccountRepository.GetAllAsync().ToListAsync();
+
+            return accounts.Select(a => new SystemAccountDTO
+            {
+                AccountID = a.AccountId,
+                AccountName = a.AccountName,
+                AccountEmail = a.AccountEmail,
+                AccountRole = a.AccountRole
+            }).ToList();
+        }
+        public async Task<bool> CreateAccountAsync(SystemAccountDTOAdd model)
+        {
+            var existingAccount = await _unitOfWork.AccountRepository.GetByEmailAsync(model.AccountEmail);
+            if (existingAccount != null)
+            {
+                return false;
+            }
+
+            var account = new SystemAccount
+            {
+                AccountName = model.AccountName,
+                AccountEmail = model.AccountEmail,
+                AccountPassword = model.AccountPassword,
+                AccountRole = model.AccountRole
+            };
+
+            await _unitOfWork.AccountRepository.InsertAsync(account);
+            return await _unitOfWork.SaveChangesAsync() > 0;
+
+        }
     }
 }
-        

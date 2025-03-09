@@ -17,6 +17,7 @@ namespace Team_07_PRN222_A02.BLL.Mapping
                 .ForMember(des => des.AccountName, act => act.MapFrom(src => src.CreatedBy.AccountName))
                 .ForMember(des => des.Tags, act => act.MapFrom(src => src.Tags))
                 .ForMember(des => des.CategoryName, act => act.MapFrom(src => src.Category.CategoryName));
+            CreateMap<Category, CategoryDTO>();
         }
     }
 }

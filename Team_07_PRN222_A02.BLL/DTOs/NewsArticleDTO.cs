@@ -24,6 +24,7 @@ namespace Team_07_PRN222_A02.BLL.DTOs
 
         public string CategoryName { get; set; }
 
+        public string CategoryId { get; set; }
         public string AccountName
         {
             get; set;
