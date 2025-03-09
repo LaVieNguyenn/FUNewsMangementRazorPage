@@ -25,5 +25,6 @@ namespace Team_07_PRN222_A02.Pages.AdminPage
             Accounts = await _services.GetAllAccountsAsync();
             return Page();
         }
+       
     }
 }
