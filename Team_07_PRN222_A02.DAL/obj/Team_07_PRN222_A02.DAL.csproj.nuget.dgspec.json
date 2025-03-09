@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {}
+    "C:\\Users\\Hoang\\Desktop\\git2\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
+    "C:\\Users\\Hoang\\Desktop\\git2\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+        "projectUniqueName": "C:\\Users\\Hoang\\Desktop\\git2\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
         "projectName": "Team_07_PRN222_A02.DAL",
-        "projectPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
-        "packagesPath": "C:\\Users\\PhiHung\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\obj\\",
+        "projectPath": "C:\\Users\\Hoang\\Desktop\\git2\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+        "packagesPath": "C:\\Users\\Hoang\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Hoang\\Desktop\\git2\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PhiHung\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -96,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

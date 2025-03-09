@@ -4,11 +4,14 @@ using Team_07_PRN222_A02.DAL.Repositories.NewsRepository;
 
 namespace Team_07_PRN222_A02.DAL.UnitOfWork
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IAccountRepository AccountRepository { get; }
         INewsRepository NewsArticleRepository { get; }
         ICategoryRepository CategoryRepository { get; }
         Task<int> SaveChangesAsync();
+        void BeginTransaction();
+        void CommitTransaction();
+        void RollBack();
     }
 }

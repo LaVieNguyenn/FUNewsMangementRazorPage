@@ -62,5 +62,6 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
             _context.SystemAccounts.Update(account);
             await _context.SaveChangesAsync();
         }
+
     }
 }

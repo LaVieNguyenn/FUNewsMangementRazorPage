@@ -122,7 +122,6 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
             {
                 return false;
             }
-
             var account = new SystemAccount
             {
                 AccountName = model.AccountName,
@@ -130,7 +129,6 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
                 AccountPassword = model.AccountPassword,
                 AccountRole = model.AccountRole
             };
-
             await _unitOfWork.AccountRepository.InsertAsync(account);
             return await _unitOfWork.SaveChangesAsync() > 0;
 
