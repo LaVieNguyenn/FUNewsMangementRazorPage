@@ -1,5 +1,4 @@
-﻿using Team_07_PRN222_A02.DAL.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Team_07_PRN222_A02.DAL.Models;
 
 namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
 {
@@ -20,7 +20,7 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
         }
         public async Task DeleteAsync(SystemAccount obj) => _context.SystemAccounts.Remove(obj);
 
-        public  IQueryable<SystemAccount> GetAllAsync()
+        public IQueryable<SystemAccount> GetAllAsync()
         {
             return _context.SystemAccounts.AsQueryable();
         }
@@ -46,5 +46,21 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
         }
 
 
+        public async Task<SystemAccount?> GetAccountByEmailAsync(string email)
+        {
+            return await _context.SystemAccounts
+                .FirstOrDefaultAsync(a => a.AccountEmail == email);
+        }
+
+        public async Task<SystemAccount> GetAccountById(int accountID)
+        {
+            return await _context.SystemAccounts.FindAsync(accountID);
+        }
+
+        public async Task UpdateAccountAsync(SystemAccount account)
+        {
+            _context.SystemAccounts.Update(account);
+            await _context.SaveChangesAsync();
+        }
     }
 }
