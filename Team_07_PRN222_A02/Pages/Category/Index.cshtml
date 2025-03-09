@@ -50,12 +50,17 @@
         var editModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
         editModal.show();
     }
-
+    function toggleAddCategoryForm() {
+        let form = document.getElementById("addCategoryForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    }
 </script>
 <h2>Category Management</h2>
 
+<button class="btn btn-primary" onclick="toggleAddCategoryForm()">➕ Add New Category</button>
+
 <!-- Form tạo danh mục -->
-<form method="post" asp-page-handler="Create" >
+<form method="post" id="addCategoryForm" asp-page-handler="Create" style="display: none;">
     <div class="form-group">
         <label for="CategoryName">Category Name</label>
         <input asp-for="NewCategory.CategoryName" class="form-control" required />
@@ -86,6 +91,7 @@
     </div>
 
     <button type="submit" class="btn btn-success">✔ Add Category</button>
+    <button type="button" class="btn btn-success" onclick="toggleAddCategoryForm()">❌ Cancel</button>
 </form>
 
 <!-- Modal Edit Category -->
