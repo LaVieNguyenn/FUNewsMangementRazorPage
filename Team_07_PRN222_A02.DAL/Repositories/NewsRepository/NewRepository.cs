@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,31 +16,39 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
             _context = funewsManagementContext;
         }
 
-        public Task DeleteAsync(NewsArticle obj)
+        public async Task DeleteAsync(NewsArticle obj)
         {
-            throw new NotImplementedException();
+            _context.NewsArticles.Remove(obj);
+            await _context.SaveChangesAsync();
         }
 
-        public IQueryable<NewsArticle> GetAllAsync() =>  _context.NewsArticles.AsQueryable();
+        public IQueryable<NewsArticle> GetAllAsync() => _context.NewsArticles.AsQueryable();
 
-        public Task<NewsArticle?> GetByIdAsync(int obj)
+        public async Task<NewsArticle?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.NewsArticles.FindAsync(id);
         }
 
-        public Task InsertAsync(NewsArticle obj)
+        public async Task InsertAsync(NewsArticle obj)
         {
-            throw new NotImplementedException();
+            await _context.NewsArticles.AddAsync(obj);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(NewsArticle obj)
+        public async Task UpdateAsync(NewsArticle obj)
         {
-            throw new NotImplementedException();
+            _context.NewsArticles.Update(obj);
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddAsync(NewsArticle obj)
+        {
+            await _context.NewsArticles.AddAsync(obj);
+            await _context.SaveChangesAsync();
         }
         public async Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId)
         {
@@ -49,5 +56,6 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
                 .Where(n => n.CreatedById == authorId)
                 .ToListAsync();
         }
+
     }
 }

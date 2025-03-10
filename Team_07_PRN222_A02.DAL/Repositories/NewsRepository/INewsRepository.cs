@@ -9,5 +9,9 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
 {
     public interface INewsRepository : IGenericRepository<NewsArticle>
     {
+        Task AddAsync(NewsArticle entity);
+        Task UpdateAsync(NewsArticle obj);
+        Task DeleteAsync(NewsArticle entity);
+
     }
 }
