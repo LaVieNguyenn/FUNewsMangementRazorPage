@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor _httpContextAccessor
 @{
     var isLogin = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
@@ -123,7 +123,7 @@
                                         {
                                             <a class="dropdown-item" asp-page="Category/Index">Manage Category</a>
                                             <a class="dropdown-item" asp-controller="Profile" asp-action="Index">Go to My Profile</a>
-                                            <a class="dropdown-item" asp-controller="News" asp-action="ManageNews">Manage News</a>
+                                            <a class="dropdown-item" asp-page="News/ManageNews">Manage News</a>
                                         }
                                         @if (userRole == "Admin")
                                         {
