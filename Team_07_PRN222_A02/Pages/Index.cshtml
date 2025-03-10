@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -12,10 +12,12 @@
         <div class="container">
             <partial name="News/NewsByCategory" model="Model.news.Skip(5).ToList()" />
 
-            <!-- Thêm nút 'Xem báo cáo' -->
-            <div class="text-center mt-4">
-                <a asp-page="/Report" class="btn btn-warning">📊 Xem báo cáo</a>
-            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="text-center mt-4">
+                    <a asp-page="/Report" class="btn btn-warning">📊 Xem báo cáo</a>
+                </div>
+            }
         </div><!-- end container -->
     </section>
 }
