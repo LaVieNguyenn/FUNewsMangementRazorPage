@@ -32,10 +32,10 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return NotFound();
             }
 
-            //if (Profile.AccountRole != 1)
-            //{
-            //    return Forbid();
-            //}
+            if (Profile.AccountRole != 1)
+            {
+                return Forbid();
+            }
 
             return Page();
         }
