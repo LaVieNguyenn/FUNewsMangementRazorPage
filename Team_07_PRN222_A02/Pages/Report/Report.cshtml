@@ -1,0 +1,46 @@
+﻿@page
+@model ReportModel
+@{
+    ViewData["Title"] = "Báo cáo tin tức";
+}
+
+<h2>News reports by time period</h2>
+
+<form method="post">
+    <label for="startDate">From:</label>
+    <input type="date" id="startDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required>
+
+    <label for="endDate">To:</label>
+    <input type="date" id="endDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required>
+
+    <label for="category">Categories:</label>
+    <select id="category" name="Category">
+        <option value="">All</option>
+        @foreach (var category in Model.Categories)
+        {
+            <option value="@category">@category</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary">📊 View Reports</button>
+</form>
+
+@if (Model.ReportData.Any())
+{
+    <h3>Report Results</h3>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Date created</th>
+            <th>Categories</th>
+        </tr>
+        @foreach (var article in Model.ReportData)
+        {
+            <tr>
+                <td>@article.NewsTitle</td>
+                <td>@article.CreatedDate.ToShortDateString()</td>
+                <td>@article.CategoryName</td>
+            </tr>
+        }
+    </table>
+}
