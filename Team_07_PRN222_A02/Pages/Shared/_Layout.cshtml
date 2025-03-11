@@ -122,7 +122,7 @@
                                         @if (userRole == "Staff")
                                         {
                                             <a class="dropdown-item" asp-page="Category/Index">Manage Category</a>
-                                            <a class="dropdown-item" asp-controller="Profile" asp-action="Index">Go to My Profile</a>
+                                            <a class="dropdown-item" asp-page="Profile/Index">Go to My profile</a>
                                             <a class="dropdown-item" asp-page="News/ManageNews">Manage News</a>
                                         }
                                         @if (userRole == "Admin")
