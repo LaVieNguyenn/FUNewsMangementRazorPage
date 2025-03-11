@@ -45,3 +45,19 @@ C:\Users\Hoang\Desktop\git2\FUNewsMangementRazorPage\Team_07_PRN222_A02.BLL\obj\
 C:\Users\Hoang\Desktop\git2\FUNewsMangementRazorPage\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\refint\Team_07_PRN222_A02.BLL.dll
 C:\Users\Hoang\Desktop\git2\FUNewsMangementRazorPage\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.pdb
 C:\Users\Hoang\Desktop\git2\FUNewsMangementRazorPage\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.BLL.dll
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.BLL.deps.json
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.BLL.dll
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.BLL.pdb
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.dll
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.csproj.AssemblyReference.cache
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.AssemblyInfoInputs.cache
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.AssemblyInfo.cs
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.csproj.CoreCompileInputs.cache
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.sourcelink.json
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_.4F8EF657.Up2Date
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.dll
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\refint\Team_07_PRN222_A02.BLL.dll
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.pdb
+D:\E\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.BLL.dll

@@ -20,14 +20,13 @@ namespace Team_07_PRN222_A02.Pages.Profile
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(userEmail))
             {
                 return RedirectToPage("/Authentication/Login");
             }
 
-            Profile = await _accountService.GetAccountById(int.Parse(userId));
-
+            Profile = await _accountService.GetAccountByEmailAsync(userEmail);
             if (Profile == null)
             {
                 return NotFound();
