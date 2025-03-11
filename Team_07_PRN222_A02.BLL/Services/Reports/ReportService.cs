@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,11 +32,19 @@ namespace Team_07_PRN222_A02.BLL.Services
                     NewsContent = n.NewsContent,
                     NewsSource = n.NewsSource,
                     CategoryName = n.Category.CategoryName,
-                    
                 })
                 .ToListAsync();
 
             return newsArticles;
+        }
+
+        public async Task<List<string>> GetAllCategoriesAsync()
+        {
+            return await _newsRepository
+                .GetAllAsync()
+                .Select(n => n.Category.CategoryName)
+                .Distinct()
+                .ToListAsync();
         }
     }
 }
