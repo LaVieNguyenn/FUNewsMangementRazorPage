@@ -50,8 +50,23 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return Forbid();
             }
 
-            await _accountService.UpdateProfileAsync(Profile);
+            var existingAccount = await _accountService.GetAccountById(Profile.AccountId);
+            if (existingAccount == null)
+            {
+                return NotFound();
+            }
+
+            existingAccount.AccountName = Profile.AccountName;
+
+            if (!string.IsNullOrWhiteSpace(Profile.AccountPassword))
+            {
+                existingAccount.AccountPassword = Profile.AccountPassword;
+            }
+
+            await _accountService.UpdateProfileAsync(existingAccount);
+
             return RedirectToPage("./Index");
         }
+
     }
 }
