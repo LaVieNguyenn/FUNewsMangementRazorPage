@@ -1,0 +1,322 @@
+﻿@page   
+@model Team_07_PRN222_A02.Pages.Category.IndexModel
+@{
+    @if (Model.Categories != null && Model.Categories.Any())
+    {
+        var categoryOptionss = Model.Categories;
+        // Render bình thường
+    }
+    else
+    {
+        <p>⚠ No categories found.</p>
+    }
+
+    var categoryOptions = Model.Categories
+    .Where(c => c.ParentCategoryID == null) // Chỉ lấy category gốc
+    .Select(c => $"<option value='{c.CategoryID}'>{c.CategoryName}</option>")
+    .Aggregate((a, b) => a + b);
+
+}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+<link rel="stylesheet" href="~/css/Toast.css" asp-append-version="true" />
+<script>
+    function toggleChildren(parentId) {
+        let rows = document.querySelectorAll(`tr[data-parent-id='${parentId}']`);
+        let icon = document.getElementById(`icon-${parentId}`);
+        let toggleText = document.getElementById(`toggle-${parentId}`);
+
+        let isHidden = rows[0].style.display === 'none';
+
+        rows.forEach(row => {
+            if (isHidden) {
+                row.style.display = '';
+                setTimeout(() => row.style.opacity = '1', 10); // Delay để kích hoạt transition
+            } else {
+                row.style.opacity = '0';
+                setTimeout(() => row.style.display = 'none', 300); // Ẩn sau khi transition kết thúc
+            }
+        });
+
+        icon.textContent = isHidden ? '▼' : '▶';
+        toggleText.classList.toggle("active", isHidden); // Đổi màu chữ khi mở
+    }
+        function openEditModal(categoryId, categoryName, categoryDescription, parentCategoryId, isActive) {
+        document.getElementById('editCategoryId').value = categoryId;
+        document.getElementById('editCategoryName').value = categoryName;
+        document.getElementById('editCategoryDescription').value = categoryDescription;
+        document.getElementById('editParentCategoryId').value = parentCategoryId || '';
+         document.getElementById("editIsActive").value = isActive ? "1" : "0";
+
+        var editModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+        editModal.show();
+    }
+    function toggleAddCategoryForm() {
+        let form = document.getElementById("addCategoryForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+      function showToast(message, type = 'success') {
+        let toastContainer = document.getElementById('toast-container');
+        let toast = document.createElement('div');
+        toast.classList.add('toast', `toast-${type}`);
+        toast.innerHTML = `${message} <div class='toast-progress'></div>`;
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('hide');
+
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>showToast('@TempData["SuccessMessage"]', 'success');</text>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <text>showToast('@TempData["ErrorMessage"]', 'error');</text>
+    }
+    });
+
+          document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("loading-overlay").style.display = "none";
+    });
+
+    $("form").on("submit", function (event) {
+        let form = $(this);
+        $.ajax({
+            type: form.attr("method"),
+            url: form.attr("action"),
+            data: form.serialize(),
+            success: function () {
+                document.getElementById("loading-overlay").style.display = "none";
+            },
+            error: function () {
+                document.getElementById("loading-overlay").style.display = "none";
+            }
+        });
+    });
+
+</script>
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<h2>Category Management</h2>
+
+<button class="btn btn-primary" onclick="toggleAddCategoryForm()">➕ Add New Category</button>
+
+<!-- Form tạo danh mục -->
+<form method="post" id="addCategoryForm" asp-page-handler="Create" style="display: none;">
+    <div class="form-group">
+        <label for="CategoryName">Category Name</label>
+        <input asp-for="NewCategory.CategoryName" class="form-control" required />
+        <span asp-validation-for="NewCategory.CategoryName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="CategoryDescription">Description</label>
+        <textarea asp-for="NewCategory.CategoryDescription" class="form-control"></textarea>
+        <span asp-validation-for="NewCategory.CategoryDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ParentCategoryId">Parent Category</label>
+        <select asp-for="NewCategory.ParentCategoryId" class="form-control">
+            <option value="">-- Select Parent Category --</option>
+            @Html.Raw(categoryOptions)  <!-- Dùng lại danh sách đã tạo -->
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="IsActive">Active</label>
+        <select asp-for="NewCategory.IsActive" class="form-control">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <span asp-validation-for="NewCategory.IsActive" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">✔ Add Category</button>
+    <button type="button" class="btn btn-success" onclick="toggleAddCategoryForm()">❌ Cancel</button>
+</form>
+
+<!-- Modal Edit Category -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="Edit">
+                    <input type="hidden" id="editCategoryId" name="CategoryID">
+
+                    <div class="mb-3">
+                        <label for="editCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="editCategoryName" name="CategoryName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editCategoryDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editCategoryDescription" name="CategoryDescription"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editParentCategoryId" class="form-label">Parent Category</label>
+                        <select class="form-control" id="editParentCategoryId" name="ParentCategoryId">
+                            <option value="">-- Select Parent Category --</option>
+                            @Html.Raw(categoryOptions)  <!-- Dùng lại danh sách đã tạo -->
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editIsActive" class="form-label">Active</label>
+                        <select class="form-control" id="editIsActive" name="IsActive">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hiển thị danh sách danh mục -->
+<table class="table table-bordered mt-4">
+    <thead>
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Category Description</th>
+            <th>ParentCategoryID</th>
+            <th>IsActive</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            var categoryLookup = Model.Categories.ToLookup(c => c.ParentCategoryID);
+
+            @foreach (var category in Model.Categories.Where(c => c.ParentCategoryID == null)) // Chỉ lấy danh mục gốc
+            {
+                <tr>
+                    <td>@category.CategoryID</td>
+                    <td>
+                        @if (categoryLookup.Contains(category.CategoryID)) // Nếu có danh mục con
+                        {
+                            <a href="javascript:void(0);" onclick="toggleChildren(@category.CategoryID)" class="category-toggle" id="toggle-@category.CategoryID">
+                                <span id="icon-@category.CategoryID">▶</span> @category.CategoryName
+                            </a>
+                        }
+                        else
+                        {
+                            <span> @category.CategoryName</span>
+                        }
+                    </td>
+                    <td>@category.CategoryDescription</td>
+                    <td>@category.ParentCategoryID</td>
+                    <td>@category.IsActive</td>
+                    <td>
+                        <div class="d-flex flex-column align-items-start">
+                            <button class="btn btn-warning btn-sm w-auto"
+                                    onclick="openEditModal('@category.CategoryID', '@category.CategoryName', '@category.CategoryDescription', '@category.ParentCategoryID', '@category.IsActive')">
+                                ✏️ Edit
+                            </button>
+                            <form method="post">
+                                @if (!Model.Categories.Any(c => c.ParentCategoryID == category.CategoryID) &&
+                               !Model.NewsArticles.Any(n => n.CategoryId == category.CategoryID.ToString()))
+                                {
+                                    <button type="submit" asp-page-handler="Delete" asp-route-id="@category.CategoryID"
+                                            class="btn btn-danger btn-sm w-auto mt-1"
+                                            onclick="return confirm('Are you sure?');">
+                                        🗑 Delete
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button"
+                                            class="btn btn-secondary disabled btn-sm w-auto mt-1"
+                                            title="Cannot delete category with subcategories or linked news articles.">
+                                        🗑 Delete
+                                    </button>
+                                }
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                @if (categoryLookup.Contains(category.CategoryID)) // Nếu có danh mục con
+                {
+                    @foreach (var subCategory in categoryLookup[category.CategoryID])
+                    {
+                        <tr class="child-category" data-parent-id="@category.CategoryID" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
+                            <td>@subCategory.CategoryID</td>
+                            <td>↳ @subCategory.CategoryName</td>
+                            <td>@subCategory.CategoryDescription</td>
+                            <td>@subCategory.ParentCategoryID</td>
+                            <td>@subCategory.IsActive</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="openEditModal('@subCategory.CategoryID', '@subCategory.CategoryName', '@subCategory.CategoryDescription', '@subCategory.ParentCategoryID', '@subCategory.IsActive')">
+                                    ✏️ Edit
+                                </button>
+                                <form method="post">
+                                    @if (!Model.NewsArticles.Any(n => n.CategoryId == subCategory.CategoryID.ToString()))
+                                    {
+                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@subCategory.CategoryID"
+                                                class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+                                            🗑 Delete
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="btn btn-secondary disabled btn-sm"
+                                                title="Cannot delete category because it's linked to a news article.">
+                                            🗑 Delete
+                                        </button>
+                                    }
+                                </form>
+
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No categories available.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    .category-toggle {
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+        .category-toggle.active {
+            color: darkviolet; /* Màu xám khi mở */
+        }
+</style>
