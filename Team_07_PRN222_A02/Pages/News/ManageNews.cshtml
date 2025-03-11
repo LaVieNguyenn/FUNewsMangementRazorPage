@@ -1,0 +1,69 @@
+﻿@page
+@model ManageNewsModel
+@{
+    ViewData["Title"] = "Manage News";
+}
+
+<h2>Manage News</h2>
+
+<!-- Form Thêm Bài Viết -->
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" asp-for="NewArticle.NewsTitle" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Content</label>
+        <textarea class="form-control" asp-for="NewArticle.NewsContent" rows="4" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select class="form-control" asp-for="NewArticle.CategoryId" required>
+            <option value="">-- Select Category --</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.CategoryID">@category.CategoryName</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success" asp-page-handler="Add">Add News</button>
+</form>
+
+<hr />
+
+@if (Model.NewsList.Any())
+{
+    <table class="table table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Created Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var news in Model.NewsList)
+            {
+                <tr>
+                    <td>@news.NewsTitle</td>
+                    <td>@news.AccountName</td>
+                    <td>@news.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a asp-page="EditNews" asp-route-id="@news.NewsArticleId" class="btn btn-warning">Edit</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@news.NewsArticleId" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No news articles found.</p>
+}
