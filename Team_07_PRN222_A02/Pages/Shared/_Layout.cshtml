@@ -1,4 +1,4 @@
-@using Microsoft.AspNetCore.Http
+﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor _httpContextAccessor
 @{
     var isLogin = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
@@ -101,7 +101,7 @@
                             <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                                 <i class="fa fa-search"></i> Search
                             </a>
-
+                            @await Component.InvokeAsync("Notification")
                             @if (!isLogin)
                             {
                                 <a asp-page="Authentication/Login" style="padding-left: 2rem;" title="Login">
@@ -153,6 +153,8 @@
     </div><!-- end wrapper -->
     <!-- Core JavaScript
     ================================================== -->
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
     <script src="~/js/jquery.min.js"></script>
     <script src="~/js/tether.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>

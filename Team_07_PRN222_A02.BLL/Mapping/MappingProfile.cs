@@ -25,7 +25,10 @@ namespace Team_07_PRN222_A02.BLL.Mapping
             CreateMap<NewsArticleUpdateDTO, NewsArticle>()
                 .ForMember(dest => dest.NewsArticleId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore());
-                
+
+            CreateMap<NotificationDTO, Notification>().ReverseMap();
+            CreateMap<CreateNotificationDTO, Notification>().ReverseMap();
+
         }
     }
 }

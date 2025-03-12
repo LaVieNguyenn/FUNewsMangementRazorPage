@@ -1,0 +1,27 @@
+﻿@model List<Team_07_PRN222_A02.BLL.DTOs.NotificationDTO>
+
+<div class="dropdown d-inline">
+    <a class="dropdown-toggle position-relative" href="#" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-bell"></i>
+        <span id="notificationBadge" class="badge badge-danger" style="position: absolute; top: -5px; right: -5px; display: none;">!</span>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="notificationDropdown" style="width: 300px;">
+        <h6 class="dropdown-header">Thông báo</h6>
+        <div id="notificationList">
+
+            @if (Model.Any())
+            {
+                @foreach (var notification in Model)
+                {
+                    <a class="dropdown-item">@notification.Message</a>
+                    <strong>@notification.CreatedBy:@notification.Title</strong><br>@notification.Message
+                }
+            }
+            else
+            {
+                <p class="text-muted text-center">No Notification</p>
+            }
+        </div>
+        </div>
+    </div>

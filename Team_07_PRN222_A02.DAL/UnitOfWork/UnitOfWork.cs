@@ -2,12 +2,7 @@
 using Team_07_PRN222_A02.DAL.Repositories.AccountRepository;
 using Team_07_PRN222_A02.DAL.Repositories.CategoryRepository;
 using Team_07_PRN222_A02.DAL.Repositories.NewsRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using Team_07_PRN222_A02.DAL.Repositories.NotificationRepository;
 
 namespace Team_07_PRN222_A02.DAL.UnitOfWork
 {
@@ -18,6 +13,7 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
         private IAccountRepository? _accountRepository;
         private INewsRepository? _newArticleRepository;
         private ICategoryRepository? _categoryRepository;
+        private INotificationRepository? _notificationRepository;
         private bool disposed = false;
         public UnitOfWork(FunewsManagementContext context)
         {
@@ -56,6 +52,19 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
                 return _categoryRepository;
             }
         }
+
+        public INotificationRepository NotificationRepository
+        {
+            get
+            {
+                if (_notificationRepository == null)
+                {
+                    _notificationRepository = new NotificationRepository(_context);
+                }
+                return _notificationRepository;
+            }
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();

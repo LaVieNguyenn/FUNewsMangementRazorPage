@@ -7,16 +7,27 @@ using System.Threading.Tasks;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.CategoryService;
+using Microsoft.AspNetCore.SignalR;
+using Team_07_PRN222_A02.Hubs;
+using Team_07_PRN222_A02.DAL.Models;
+using Team_07_PRN222_A02.DAL.Repositories.NotificationRepository;
+using Team_07_PRN222_A02.BLL.Services.NotificationService;
 
 public class ManageNewsModel : PageModel
 {
     private readonly INewArticleService _newsService;
     private readonly ICategoryService _categoryService;
+    private readonly IHubContext<ChatHub> _hubContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly INotificationService _notificationService;
 
-    public ManageNewsModel(INewArticleService newsService, ICategoryService categoryService)
+    public ManageNewsModel(INewArticleService newsService, ICategoryService categoryService, IHubContext<ChatHub> hubContext, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
     {
         _newsService = newsService;
         _categoryService = categoryService;
+        _hubContext = hubContext;
+        _httpContextAccessor = httpContextAccessor;
+        _notificationService = notificationService;
     }
 
     public List<NewsArticleDTO> NewsList { get; set; } = new();
@@ -57,7 +68,20 @@ public class ManageNewsModel : PageModel
             await _newsService.CreateNewsAsync(NewArticle);
 
             Console.WriteLine("✅ News added successfully!");
-            await LoadDataAsync();
+                await LoadDataAsync();
+
+
+            var notification = new CreateNotificationDTO
+            {
+                Title = $"News {NewArticle.NewsTitle} Uploaded",
+                Message = NewArticle.NewsContent,
+                CreatedBy = _httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value,
+                CreatedAt = DateTime.Now,
+                IsRead = false
+            };
+
+            await _notificationService.CreateNotification(notification);
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", notification.CreatedBy, notification.Title, notification.Message);
 
             return Page();
         }

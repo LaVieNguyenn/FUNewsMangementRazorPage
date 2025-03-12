@@ -24,6 +24,8 @@ public partial class FunewsManagementContext : DbContext
 
     public virtual DbSet<Tag> Tags { get; set; }
 
+    public virtual DbSet<Notification> Notifications { get; set; }
+
    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -118,6 +120,20 @@ public partial class FunewsManagementContext : DbContext
             entity.Property(e => e.TagId).HasColumnName("TagID");
             entity.Property(e => e.Note).HasMaxLength(500);
             entity.Property(e => e.TagName).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Notification");
+
+            entity.ToTable("Notification");
+
+            entity.Property(e => e.Id).HasColumnName("Id");
+            entity.Property(e => e.Title).HasMaxLength(100);
+            entity.Property(e => e.Message).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt);
+            entity.Property(e => e.IsRead);
+            entity.Property(e => e.CreatedBy).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);

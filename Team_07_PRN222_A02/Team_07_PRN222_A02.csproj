@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Team_07_PRN222_A02.BLL\Team_07_PRN222_A02.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Notification\" />
+  </ItemGroup>
+
 </Project>

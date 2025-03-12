@@ -1,6 +1,7 @@
 ﻿using Team_07_PRN222_A02.DAL.Repositories.AccountRepository;
 using Team_07_PRN222_A02.DAL.Repositories.CategoryRepository;
 using Team_07_PRN222_A02.DAL.Repositories.NewsRepository;
+using Team_07_PRN222_A02.DAL.Repositories.NotificationRepository;
 
 namespace Team_07_PRN222_A02.DAL.UnitOfWork
 {
@@ -9,6 +10,7 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
         IAccountRepository AccountRepository { get; }
         INewsRepository NewsArticleRepository { get; }
         ICategoryRepository CategoryRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         Task<int> SaveChangesAsync();
         void BeginTransaction();
         void CommitTransaction();
