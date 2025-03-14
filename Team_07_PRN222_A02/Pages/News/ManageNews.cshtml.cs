@@ -85,7 +85,7 @@ public class ManageNewsModel : PageModel
 
         try
         {
-            await _newsService.UpdateNewsAsync(NewArticle); // Sử dụng NewArticle cho việc cập nhật  
+            await _newsService.UpdateNewsAsync(NewArticle); // Sử dụng NewArticle cho việc cập nhật
         }
         catch (Exception ex)
         {
