@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ using Team_07_PRN222_A02.Hubs;
 using Team_07_PRN222_A02.DAL.Models;
 using Team_07_PRN222_A02.DAL.Repositories.NotificationRepository;
 using Team_07_PRN222_A02.BLL.Services.NotificationService;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class ManageNewsModel : PageModel
 {
@@ -35,6 +36,7 @@ public class ManageNewsModel : PageModel
 
     [BindProperty]
     public NewsArticleUpdateDTO NewArticle { get; set; } = new NewsArticleUpdateDTO();
+    
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -59,7 +61,7 @@ public class ManageNewsModel : PageModel
             if (NewArticle.CategoryId <= 0)
             {
                 Console.WriteLine("❌ Invalid CategoryId");
-                ModelState.AddModelError(string.Empty, "VPlease select a valid category");
+                ModelState.AddModelError(string.Empty, "Please select a valid category");
                 await LoadDataAsync();
                 return Page();
             }
@@ -68,7 +70,7 @@ public class ManageNewsModel : PageModel
             await _newsService.CreateNewsAsync(NewArticle);
 
             Console.WriteLine("✅ News added successfully!");
-                await LoadDataAsync();
+            await LoadDataAsync();
 
 
             var notification = new CreateNotificationDTO
@@ -94,6 +96,9 @@ public class ManageNewsModel : PageModel
         }
     }
 
+    
+
+
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
         try
@@ -109,8 +114,10 @@ public class ManageNewsModel : PageModel
         }
 
         await LoadDataAsync();
+
         return Page();
     }
+
 
     private async Task LoadDataAsync()
     {
