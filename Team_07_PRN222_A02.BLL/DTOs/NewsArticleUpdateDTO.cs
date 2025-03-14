@@ -9,7 +9,7 @@ namespace Team_07_PRN222_A02.BLL.DTOs
         public string? NewsTitle { get; set; }
         public string? Headline { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public string NewsContent { get; set; } = null!;
+        public string? NewsContent { get; set; } = null!;
         public string? NewsSource { get; set; }
         public int? CategoryId { get; set; }
         public byte? NewsStatus { get; set; } 
