@@ -8,7 +8,7 @@
     <div class="col-lg-10 col-md-10 col-sm-12 mx-auto p-4 shadow-lg rounded bg-white">
         <h2 class="text-center mb-4">Manage News</h2>
 
-        <!-- Form Thêm Bài Viết (dùng NewArticle) -->
+        <!-- Form Thêm Bài Viết -->
         <form method="post" asp-page-handler="Add">
             <div class="mb-4">
                 <label class="form-label fw-bold">Title</label>
@@ -101,43 +101,36 @@
         {
             <p class="text-center fs-5 text-muted">No news articles found.</p>
         }
-        }
     </div>
 
     <!-- Modal Chỉnh Sửa Bài Viết -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit News</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div id="editModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+        <div style="background-color:white; margin:15% auto; padding:20px; border:1px solid #888; width:80%;">
+            <span onclick="closeModal()" style="float:right; cursor:pointer; color:red; font-size:20px;">&times;</span>
+            <h5>Edit News</h5>
+            <form method="post" asp-page-handler="Edit">
+                <input type="hidden" id="editId" name="EditArticle.Id" />
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" id="editTitle" name="EditArticle.NewsTitle" required />
                 </div>
-                <div class="modal-body">
-                    <form method="post" asp-page-handler="Edit">
-                        <input type="hidden" id="editId" name="EditArticle.Id" />
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input type="text" class="form-control" id="editTitle" name="EditArticle.NewsTitle" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Headline</label>
-                            <input type="text" class="form-control" id="editHeadline" name="EditArticle.Headline" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Source</label>
-                            <input type="text" class="form-control" id="editSource" name="EditArticle.NewsSource" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">News Status</label>
-                            <select class="form-control" id="editStatus" name="EditArticle.NewsStatus" required>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
-                    </form>
+                <div class="mb-3">
+                    <label class="form-label">Headline</label>
+                    <input type="text" class="form-control" id="editHeadline" name="EditArticle.Headline" required />
                 </div>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Source</label>
+                    <input type="text" class="form-control" id="editSource" name="EditArticle.NewsSource" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">News Status</label>
+                    <select class="form-control" id="editStatus" name="EditArticle.NewsStatus" required>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+            </form>
         </div>
     </div>
 
@@ -146,12 +139,23 @@
             document.getElementById("editId").value = id;
             document.getElementById("editTitle").value = title;
             document.getElementById("editHeadline").value = headline;
-            document.getElementById("editContent").value = content;
             document.getElementById("editSource").value = source;
             document.getElementById("editStatus").value = status;
-            document.getElementById("editCategory").value = categoryId;
 
-            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            editModal.show();
+            // Hiện thị modal
+            document.getElementById("editModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        // Đóng modal khi nhấn ra ngoài
+        window.onclick = function (event) {
+            const modal = document.getElementById("editModal");
+            if (event.target == modal) {
+                closeModal();
+            }
         }
     </script>
+</div>  
