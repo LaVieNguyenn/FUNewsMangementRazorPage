@@ -13,12 +13,10 @@
                     <label for="startDate" class="form-label">Start Date</label>
                     <input type="date" id="startDate" name="StartDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")" required>
                 </div>
-
                 <div class="mb-3">
                     <label for="endDate" class="form-label">End Date</label>
                     <input type="date" id="endDate" name="EndDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")" required>
                 </div>
-
                 <div class="mb-3">
                     <label for="category" class="form-label">Categories</label>
                     <select id="category" name="Category" class="form-select">
@@ -29,7 +27,6 @@
                         }
                     </select>
                 </div>
-
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">📊 View Reports</button>
                 </div>
@@ -66,6 +63,12 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Biểu đồ hình tròn -->
+                <div class="mt-4">
+                    <h4 class="text-center">📊 Category Distribution</h4>
+                    <canvas id="categoryChart"></canvas>
+                </div>
             }
             else
             {
@@ -74,3 +77,34 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('categoryChart').getContext('2d');
+        var categoryData = @Html.Raw(Json.Serialize(Model.CategoryDistribution));
+
+        var labels = Object.keys(categoryData);
+        var data = Object.values(categoryData);
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Articles per Category',
+                    data: data,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#BA68C8'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    });
+</script>
