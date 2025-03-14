@@ -1,72 +1,133 @@
-﻿@page
+@page
 @model ManageNewsModel
 @{
     ViewData["Title"] = "Manage News";
 }
 
-<h2>Manage News</h2>
+<div class="container-fluid mt-4">
+    <div class="col-lg-10 col-md-10 col-sm-12 mx-auto p-4 shadow-lg rounded bg-white">
+        <h2 class="text-center mb-4">Manage News</h2>
 
-<!-- Form Thêm Bài Viết -->
-<form method="post">
-    <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-control" asp-for="NewArticle.NewsTitle" required />
+        <!-- Form Thêm Bài Viết (dùng NewArticle) -->
+        <form method="post" asp-page-handler="Add">
+            <div class="mb-4">
+                <label class="form-label fw-bold">Title</label>
+                <input type="text" class="form-control form-control-lg" asp-for="NewArticle.NewsTitle" required />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Content</label>
+                <textarea class="form-control form-control-lg" asp-for="NewArticle.NewsContent" rows="5" required></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Category</label>
+                <select class="form-control form-control-lg" asp-for="NewArticle.CategoryId" required>
+                    <option value="">-- Select Category --</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.CategoryID">@category.CategoryName</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100">Add News</button>
+        </form>
+
+        <hr class="my-5" />
+
+        @if (Model.NewsList.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var news in Model.NewsList)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@news.NewsTitle</td>
+                                <td>@news.AccountName</td>
+                                <td>@news.CreatedDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm"
+                                            onclick="editNews('@news.NewsArticleId', '@news.NewsTitle', '@news.NewsContent', '@news.CategoryId')">
+                                        Edit
+                                    </button>
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@news.NewsArticleId" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete this news article?');">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-center fs-5 text-muted">No news articles found.</p>
+        }
     </div>
+</div>
 
-    <div class="mb-3">
-        <label class="form-label">Content</label>
-        <textarea class="form-control" asp-for="NewArticle.NewsContent" rows="4" required></textarea>
+<!-- Modal Chỉnh Sửa Bài Viết -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit News</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="Edit">
+                    <input type="hidden" id="editId" name="EditArticle.Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" id="editTitle" name="EditArticle.NewsTitle" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Content</label>
+                        <textarea class="form-control" id="editContent" name="EditArticle.NewsContent" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-control" id="editCategory" name="EditArticle.CategoryId" required>
+                            <option value="">-- Select Category --</option>
+                            @foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.CategoryID">@category.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label class="form-label">Category</label>
-        <select class="form-control" asp-for="NewArticle.CategoryId" required>
-            <option value="">-- Select Category --</option>
-            @foreach (var category in Model.Categories)
-            {
-                <option value="@category.CategoryID">@category.CategoryName</option>
-            }
-        </select>
-    </div>
+<!-- Script để mở modal chỉnh sửa và điền dữ liệu -->
+<script>
+    function editNews(id, title, content, categoryId) {
+        document.getElementById("editId").value = id;
+        document.getElementById("editTitle").value = title;
+        document.getElementById("editContent").value = content;
+        document.getElementById("editCategory").value = categoryId;
 
-    <button type="submit" class="btn btn-success" asp-page-handler="Add">Add News</button>
-</form>
+        var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        editModal.show();
+    }
+</script>
 
-<hr />
-
-@if (Model.NewsList.Any())
-{
-    <table class="table table-bordered mt-4">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Created Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var news in Model.NewsList)
-            {
-                <tr>
-                    <td>@news.NewsTitle</td>
-                    <td>@news.AccountName</td>
-                    <td>@news.CreatedDate.ToString("yyyy-MM-dd")</td>
-                    <td>
-                        <a asp-page="EditNews" asp-route-id="@news.NewsArticleId" class="btn btn-warning">Edit</a>
-                        <form method="post" asp-page-handler="Delete" asp-route-id="@news.NewsArticleId" style="display:inline;">
-                        <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('Are you sure you want to delete this news article?');">
-                    Delete
-    </button>
-</form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No news articles found.</p>
-}
+<!-- Load Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
