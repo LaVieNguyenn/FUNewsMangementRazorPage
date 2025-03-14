@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.DAL.Models;
 using Team_07_PRN222_A02.DAL.UnitOfWork;
@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 
 namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
 {
-    
-
     public class NewArticleService : INewArticleService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -58,8 +56,12 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity), "Dữ liệu bài viết không hợp lệ.");
 
+            entity.Headline = newsArticle.Headline;
+            entity.NewsSource = newsArticle.NewsSource;
+            entity.NewsStatus = newsArticle.NewsStatus.HasValue ? newsArticle.NewsStatus.Value : (byte)1;
+
             await _unitOfWork.NewsArticleRepository.AddAsync(entity);
-            await _unitOfWork.SaveChangesAsync(); // Đảm bảo lưu thay đổi vào DB
+            await _unitOfWork.SaveChangesAsync();
 
             Console.WriteLine("✅ Bài viết đã được thêm thành công!");
         }
@@ -83,7 +85,6 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
                 await _unitOfWork.NewsArticleRepository.DeleteAsync(article);
             }
         }
-
 
         public async Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId)
         {
