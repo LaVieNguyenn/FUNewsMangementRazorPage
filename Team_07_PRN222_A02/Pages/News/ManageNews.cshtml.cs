@@ -9,10 +9,8 @@ using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.CategoryService;
 using Microsoft.AspNetCore.SignalR;
 using Team_07_PRN222_A02.Hubs;
-using Team_07_PRN222_A02.DAL.Models;
-using Team_07_PRN222_A02.DAL.Repositories.NotificationRepository;
 using Team_07_PRN222_A02.BLL.Services.NotificationService;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 public class ManageNewsModel : PageModel
 {
@@ -36,7 +34,6 @@ public class ManageNewsModel : PageModel
 
     [BindProperty]
     public NewsArticleUpdateDTO NewArticle { get; set; } = new NewsArticleUpdateDTO();
-    
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -66,18 +63,16 @@ public class ManageNewsModel : PageModel
                 return Page();
             }
 
-            Console.WriteLine($"📝 Adding news: {NewArticle.NewsTitle}, Category: {NewArticle.CategoryId}");
+            Console.WriteLine($"📝 Adding news: {NewArticle.NewsTitle}, Headline: {NewArticle.Headline}, Source: {NewArticle.NewsSource}, Status: {NewArticle.NewsStatus}, Category: {NewArticle.CategoryId}");
             await _newsService.CreateNewsAsync(NewArticle);
-
             Console.WriteLine("✅ News added successfully!");
             await LoadDataAsync();
-
 
             var notification = new CreateNotificationDTO
             {
                 Title = $"News {NewArticle.NewsTitle} Uploaded",
                 Message = NewArticle.NewsContent,
-                CreatedBy = _httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value,
+                CreatedBy = _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value,
                 CreatedAt = DateTime.Now,
                 IsRead = false
             };
@@ -96,9 +91,6 @@ public class ManageNewsModel : PageModel
         }
     }
 
-    
-
-
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
         try
@@ -114,10 +106,8 @@ public class ManageNewsModel : PageModel
         }
 
         await LoadDataAsync();
-
         return Page();
     }
-
 
     private async Task LoadDataAsync()
     {
