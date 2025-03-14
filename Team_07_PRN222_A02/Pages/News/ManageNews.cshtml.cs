@@ -46,6 +46,7 @@ public class ManageNewsModel : PageModel
         if (!ModelState.IsValid)
         {
             await LoadDataAsync();
+
             return Page();
         }
 

@@ -72,7 +72,7 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
             if (existingArticle != null)
             {
                 _mapper.Map(newsArticle, existingArticle);
-                _unitOfWork.NewsArticleRepository.UpdateAsync(existingArticle);
+                await _unitOfWork.NewsArticleRepository.UpdateAsync(existingArticle);
                 await _unitOfWork.SaveChangesAsync();
             }
         }
