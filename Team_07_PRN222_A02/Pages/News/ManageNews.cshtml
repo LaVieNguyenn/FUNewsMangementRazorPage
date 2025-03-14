@@ -109,22 +109,22 @@
             <span onclick="closeModal()" style="float:right; cursor:pointer; color:red; font-size:20px;">&times;</span>
             <h5>Edit News</h5>
             <form method="post" asp-page-handler="Edit">
-                <input type="hidden" id="editId" name="EditArticle.Id" />
+                <input type="hidden" id="editId" name="NewArticle.Id" />
                 <div class="mb-3">
                     <label class="form-label">Title</label>
-                    <input type="text" class="form-control" id="editTitle" name="EditArticle.NewsTitle" required />
+                    <input type="text" class="form-control" id="editTitle" name="NewArticle.NewsTitle" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Headline</label>
-                    <input type="text" class="form-control" id="editHeadline" name="EditArticle.Headline" required />
+                    <input type="text" class="form-control" id="editHeadline" name="NewArticle.Headline" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Source</label>
-                    <input type="text" class="form-control" id="editSource" name="EditArticle.NewsSource" required />
+                    <input type="text" class="form-control" id="editSource" name="NewArticle.NewsSource" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">News Status</label>
-                    <select class="form-control" id="editStatus" name="EditArticle.NewsStatus" required>
+                    <select class="form-control" id="editStatus" name="NewArticle.NewsStatus" required>
                         <option value="1">Active</option>
                         <option value="0">Inactive</option>
                     </select>
