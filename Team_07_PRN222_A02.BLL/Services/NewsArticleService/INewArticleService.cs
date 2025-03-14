@@ -15,6 +15,6 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
         Task UpdateNewsAsync(NewsArticleUpdateDTO newsArticle);
         Task DeleteNewsAsync(int id);
 
-        Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId);
+        Task<List<NewsArticleDTO>> GetNewsByAuthorIdAsync(int authorId);
     }
 }

@@ -12,6 +12,8 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
         Task AddAsync(NewsArticle entity);
         Task UpdateAsync(NewsArticle obj);
         Task DeleteAsync(NewsArticle entity);
+        Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId);
+
 
     }
 }

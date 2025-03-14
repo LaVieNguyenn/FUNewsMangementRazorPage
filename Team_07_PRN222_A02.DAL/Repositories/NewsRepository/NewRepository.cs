@@ -54,8 +54,8 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
         {
             return await _context.NewsArticles
                 .Where(n => n.CreatedById == authorId)
+                .OrderByDescending(n => n.CreatedDate)
                 .ToListAsync();
         }
-
     }
 }

@@ -39,7 +39,7 @@ else
                 <form id="editProfileForm">
                     <div class="mb-3">
                         <label for="AccountName" class="form-label">Name</label>
-                        <input type="text" id="AccountName" name="AccountName" class="form-control" required />
+                        <input type="text" id="AccountName" name="AccountName" class="form-control" />
                     </div>
 
                     <div class="mb-3">
@@ -49,7 +49,7 @@ else
                     </div>
 
                     <div class="mb-3">
-                        <label for="AccountPassword" class="form-label">New Password</label>
+                        <label for="AccountPassword" class="form-label">New Password (Optional)</label>
                         <input type="password" id="AccountPassword" name="AccountPassword" class="form-control" />
                     </div>
 
@@ -68,12 +68,12 @@ else
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newsHistoryModalLabel">News History</h5>
+                <h5 class="modal-title" id="newsHistoryModalLabel">📜 News History</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table">
-                    <thead>
+                <table class="table table-bordered">
+                    <thead class="table-dark">
                         <tr>
                             <th>Title</th>
                             <th>Created Date</th>
@@ -91,67 +91,133 @@ else
     </div>
 </div>
 
+<!-- Modal News Details -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsDetailModalLabel">📰 News Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="newsDetailContent">
+                <p class="text-center">Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Load jQuery & Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Khi bấm "Edit Profile" mở modal và load dữ liệu
+        // Mở modal Edit Profile
         $("#openEditModal").click(function () {
-            $.get("/Profile/Index?handler=LoadProfile", function (data) {
-                $("#AccountName").val(data.accountName);
-                $("#AccountEmail").val(data.accountEmail);
-                $("#AccountEmailHidden").val(data.accountEmail);
-                $("#editProfileModal").modal("show");
-            });
+            $.get("/Profile/Index?handler=LoadProfile")
+                .done(function (data) {
+                    $("#AccountName").val(data.accountName);
+                    $("#AccountEmail").val(data.accountEmail);
+                    $("#AccountEmailHidden").val(data.accountEmail);
+                    $("#editProfileModal").modal("show");
+                })
+                .fail(function () {
+                    alert("❌ Error loading profile data.");
+                });
         });
 
-        // Gửi dữ liệu form qua AJAX mà không reload trang
+        function showToast(message, type = 'success') {
+            let toastContainer = document.getElementById('toast-container');
+            let toast = document.createElement('div');
+            toast.classList.add('toast', `toast-${type}`);
+            toast.innerHTML = `${message} <div class='toast-progress'></div>`;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Submit form qua AJAX
         $("#editProfileForm").submit(function (event) {
             event.preventDefault();
+            $("#AccountEmail").prop("disabled", false);
+
             var formData = $(this).serialize();
 
             $.post("/Profile/Index?handler=SaveProfile", formData)
                 .done(function (response) {
                     if (response.success) {
-                        alert("✅ Profile updated successfully!");
+                        showToast("✅ Profile updated successfully!", "success");
                         $("#editProfileModal").modal("hide");
-                        location.reload();
+                        setTimeout(() => location.reload(), 1500);
                     } else {
-                        alert("⚠ Update failed: " + response.error);
+                        showToast("⚠ Update failed: " + response.error, "error");
                     }
                 })
                 .fail(function (xhr) {
-                    alert("❌ Error: " + xhr.responseText);
+                    showToast("❌ Error: " + xhr.responseText, "error");
                 });
         });
 
-        // Khi bấm "View News History", mở modal và tải dữ liệu
+        // Mở modal News History
+           $(document).ready(function () {
         $("#openNewsHistoryModal").click(function () {
-            $("#newsHistoryModal").modal("show");
-            loadNewsHistory();
+            $("#newsHistoryModal").modal("show"); // Mở modal ngay lập tức
+            loadNewsHistory(); // Gọi API để lấy dữ liệu
         });
 
         function loadNewsHistory() {
-            $.get("/Profile/Index?handler=LoadNewsHistory", function (data) {
-                let content = "";
-                if (data.length === 0) {
-                    content = "<tr><td colspan='3' class='text-center'>No news articles found.</td></tr>";
-                } else {
-                    data.forEach(news => {
-                        content += `
-                            <tr>
-                                <td>${news.newsTitle}</td>
-                                <td>${news.createdDate}</td>
-                                <td>
-                                    <a href="/News/Details?id=${news.newsArticleId}" class="btn btn-info">View</a>
-                                </td>
-                            </tr>`;
-                    });
-                }
-                $("#newsHistoryContent").html(content);
-            }).fail(function () {
-                $("#newsHistoryContent").html("<tr><td colspan='3' class='text-danger text-center'>Error loading news history.</td></tr>");
-            });
+            $("#newsHistoryContent").html("<tr><td colspan='3' class='text-center text-warning'>Loading...</td></tr>");
+
+            $.get("/Profile/Index?handler=LoadNewsHistory")
+                .done(function (data) {
+                    let content = "";
+                    if (!data || data.length === 0) {
+                        content = "<tr><td colspan='3' class='text-center text-danger'>No news articles found.</td></tr>";
+                    } else {
+                        data.forEach(news => {
+                            content += `
+                                <tr>
+                                    <td>${news.newsTitle}</td>
+                                    <td>${news.createdDate}</td>
+                                    <td>
+                                        <button class="btn btn-info view-news-btn" data-id="${news.newsArticleId}">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+                    $("#newsHistoryContent").html(content);
+                })
+                .fail(function () {
+                    $("#newsHistoryContent").html("<tr><td colspan='3' class='text-danger text-center'>⚠ Error loading news history.</td></tr>");
+                });
+        }
+
+        // Bắt sự kiện click vào nút View trong danh sách bài viết
+        $(document).on("click", ".view-news-btn", function () {
+            let newsId = $(this).data("id");
+            loadNewsDetails(newsId);
+        });
+
+        function loadNewsDetails(newsId) {
+            $("#newsDetailContent").html("<p class='text-center text-warning'>Loading...</p>");
+            $("#newsDetailModal").modal("show");
+
+            $.get(`/News/Details?id=${newsId}`)
+                .done(function (data) {
+                    $("#newsDetailContent").html(`
+                        <h5>${data.newsTitle}</h5>
+                        <p><strong>Date:</strong> ${data.createdDate}</p>
+                        <p>${data.newsContent}</p>
+                    `);
+                })
+                .fail(function () {
+                    $("#newsDetailContent").html("<p class='text-danger text-center'>⚠ Error loading news details.</p>");
+                });
         }
     });
+
 </script>

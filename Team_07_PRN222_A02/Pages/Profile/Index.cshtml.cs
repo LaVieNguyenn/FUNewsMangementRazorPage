@@ -14,7 +14,6 @@ namespace Team_07_PRN222_A02.Pages.Profile
         private readonly ISystemAccountService _accountService;
         private readonly INewArticleService _newsService;
 
-
         public IndexModel(ISystemAccountService accountService, INewArticleService newsService)
         {
             _accountService = accountService;
@@ -23,9 +22,15 @@ namespace Team_07_PRN222_A02.Pages.Profile
 
         public SystemAccount Profile { get; set; }
 
+        // ✅ Hàm tiện ích: Lấy email người dùng từ Claims
+        private string GetUserEmail()
+        {
+            return User.FindFirstValue(ClaimTypes.Email);
+        }
+
         public async Task<IActionResult> OnGetAsync()
         {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var userEmail = GetUserEmail();
             if (string.IsNullOrEmpty(userEmail))
             {
                 return RedirectToPage("/Authentication/Login");
@@ -40,10 +45,10 @@ namespace Team_07_PRN222_A02.Pages.Profile
             return Page();
         }
 
-        // Load dữ liệu khi mở popup
+        // ✅ Load profile khi mở modal Edit
         public async Task<IActionResult> OnGetLoadProfileAsync()
         {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var userEmail = GetUserEmail();
             if (string.IsNullOrEmpty(userEmail))
             {
                 return Unauthorized();
@@ -62,12 +67,12 @@ namespace Team_07_PRN222_A02.Pages.Profile
             });
         }
 
-        // Lưu dữ liệu khi submit form trong popup
+        // ✅ Lưu Profile khi Submit
         public async Task<IActionResult> OnPostSaveProfileAsync([FromForm] SystemAccountDTO model)
         {
             try
             {
-                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                var userEmail = GetUserEmail();
                 if (string.IsNullOrEmpty(userEmail))
                 {
                     return new JsonResult(new { success = false, error = "User not authenticated." });
@@ -79,17 +84,16 @@ namespace Team_07_PRN222_A02.Pages.Profile
                     return new JsonResult(new { success = false, error = "Account not found." });
                 }
 
-                model.AccountID = existingAccount.AccountId; // Gán ID để cập nhật
-                bool isUpdated = await _accountService.UpdateAccountAsync(model);
+                var updatedAccount = new SystemAccountDTO
+                {
+                    AccountName = model.AccountName ?? existingAccount.AccountName,
+                    AccountEmail = existingAccount.AccountEmail, // Không thay đổi email
+                    AccountRole = existingAccount.AccountRole
+                };
 
-                if (isUpdated)
-                {
-                    return new JsonResult(new { success = true });
-                }
-                else
-                {
-                    return new JsonResult(new { success = false, error = "Update failed." });
-                }
+                bool isUpdated = await _accountService.UpdateAccountAsync(updatedAccount);
+
+                return new JsonResult(new { success = isUpdated });
             }
             catch (Exception ex)
             {
@@ -98,22 +102,45 @@ namespace Team_07_PRN222_A02.Pages.Profile
             }
         }
 
+
+        // ✅ Load danh sách bài báo khi mở modal News History
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
+            try
             {
-                return Unauthorized();
+                var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+                {
+                    Console.WriteLine("❌ ERROR: Invalid User ID.");
+                    return Unauthorized();
+                }
+
+                Console.WriteLine($"🔍 Fetching news for User ID: {userId}");
+
+                // Lấy danh sách bài báo của user
+                var newsList = await _newsService.GetNewsByAuthorIdAsync(userId);
+
+                if (newsList == null || !newsList.Any())
+                {
+                    Console.WriteLine($"⚠ No news found for User ID: {userId}");
+                    return new JsonResult(new List<object>()); // Trả về mảng rỗng thay vì lỗi
+                }
+
+                Console.WriteLine($"✅ {newsList.Count()} news articles found.");
+
+                return new JsonResult(newsList.Select(news => new
+                {
+                    newsTitle = news.NewsTitle,
+                    createdDate = news.CreatedDate.ToString("yyyy-MM-dd"),
+                    newsArticleId = news.NewsArticleId
+                }));
             }
-
-            var newsList = await _newsService.GetNewsByAuthorIdAsync(int.Parse(userId));
-
-            return new JsonResult(newsList.Select(news => new
+            catch (Exception ex)
             {
-                newsTitle = news.NewsTitle,
-                createdDate = news.CreatedDate.ToString("yyyy-MM-dd"),
-                newsArticleId = news.NewsArticleId
-            }));
+                Console.WriteLine($"❌ ERROR in OnGetLoadNewsHistoryAsync: {ex.Message}");
+                return new JsonResult(new { error = "Server error: " + ex.Message });
+            }
         }
+
     }
 }

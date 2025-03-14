@@ -86,12 +86,30 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
             }
         }
 
-        public async Task<List<NewsArticle>> GetNewsByAuthorIdAsync(int authorId)
+        public async Task<List<NewsArticleDTO>> GetNewsByAuthorIdAsync(int authorId)
         {
-            return await _unitOfWork.NewsArticleRepository
+            Console.WriteLine($"🔍 Fetching news for author ID: {authorId}");
+
+            var newsList = await _unitOfWork.NewsArticleRepository
                 .GetAllAsync()
                 .Where(n => n.CreatedById == authorId)
+                .OrderByDescending(n => n.CreatedDate)
+                .Select(n => new NewsArticleDTO
+                {
+                    NewsArticleId = n.NewsArticleId,
+                    NewsTitle = n.NewsTitle,
+                    CreatedDate = n.CreatedDate
+                })
                 .ToListAsync();
+
+            if (!newsList.Any())
+            {
+                Console.WriteLine($"⚠ No news found for author ID: {authorId}");
+                return new List<NewsArticleDTO>();
+            }
+
+            Console.WriteLine($"✅ {newsList.Count} articles found for author ID: {authorId}");
+            return newsList;
         }
     }
 }
