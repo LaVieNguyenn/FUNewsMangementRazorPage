@@ -4,11 +4,11 @@
     ViewData["Title"] = "My Profile";
 }
 
-<h2>My Profile</h2>
+<h2 class="text-center">My Profile</h2>
 
 @if (Model.Profile != null)
 {
-    <div class="card">
+    <div class="card shadow-lg p-4 mb-5 bg-white rounded">
         <div class="card-body">
             <h4 class="card-title">@Model.Profile.AccountName</h4>
             <p class="card-text">
@@ -17,12 +17,141 @@
                 <strong>Account ID:</strong> @Model.Profile.AccountId
             </p>
 
-            <a asp-page="Edit" class="btn btn-primary">Edit Profile</a>
-            <a asp-page="NewsHistory" class="btn btn-info">View News History</a>
+            <button type="button" class="btn btn-primary" id="openEditModal">✏ Edit Profile</button>
+            <button type="button" class="btn btn-info" id="openNewsHistoryModal">📜 View News History</button>
         </div>
     </div>
 }
 else
 {
-    <p class="text-danger">Profile not found.</p>
+    <p class="text-danger">⚠ Profile not found.</p>
 }
+
+<!-- Modal Edit Profile -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="mb-3">
+                        <label for="AccountName" class="form-label">Name</label>
+                        <input type="text" id="AccountName" name="AccountName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="AccountEmail" class="form-label">Email</label>
+                        <input type="email" id="AccountEmail" name="AccountEmail" class="form-control" readonly />
+                        <input type="hidden" name="AccountEmailHidden" id="AccountEmailHidden" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="AccountPassword" class="form-label">New Password</label>
+                        <input type="password" id="AccountPassword" name="AccountPassword" class="form-control" />
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal News History -->
+<div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsHistoryModalLabel">News History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="newsHistoryContent">
+                        <tr>
+                            <td colspan="3" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Load jQuery & Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Khi bấm "Edit Profile" mở modal và load dữ liệu
+        $("#openEditModal").click(function () {
+            $.get("/Profile/Index?handler=LoadProfile", function (data) {
+                $("#AccountName").val(data.accountName);
+                $("#AccountEmail").val(data.accountEmail);
+                $("#AccountEmailHidden").val(data.accountEmail);
+                $("#editProfileModal").modal("show");
+            });
+        });
+
+        // Gửi dữ liệu form qua AJAX mà không reload trang
+        $("#editProfileForm").submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+
+            $.post("/Profile/Index?handler=SaveProfile", formData)
+                .done(function (response) {
+                    if (response.success) {
+                        alert("✅ Profile updated successfully!");
+                        $("#editProfileModal").modal("hide");
+                        location.reload();
+                    } else {
+                        alert("⚠ Update failed: " + response.error);
+                    }
+                })
+                .fail(function (xhr) {
+                    alert("❌ Error: " + xhr.responseText);
+                });
+        });
+
+        // Khi bấm "View News History", mở modal và tải dữ liệu
+        $("#openNewsHistoryModal").click(function () {
+            $("#newsHistoryModal").modal("show");
+            loadNewsHistory();
+        });
+
+        function loadNewsHistory() {
+            $.get("/Profile/Index?handler=LoadNewsHistory", function (data) {
+                let content = "";
+                if (data.length === 0) {
+                    content = "<tr><td colspan='3' class='text-center'>No news articles found.</td></tr>";
+                } else {
+                    data.forEach(news => {
+                        content += `
+                            <tr>
+                                <td>${news.newsTitle}</td>
+                                <td>${news.createdDate}</td>
+                                <td>
+                                    <a href="/News/Details?id=${news.newsArticleId}" class="btn btn-info">View</a>
+                                </td>
+                            </tr>`;
+                    });
+                }
+                $("#newsHistoryContent").html(content);
+            }).fail(function () {
+                $("#newsHistoryContent").html("<tr><td colspan='3' class='text-danger text-center'>Error loading news history.</td></tr>");
+            });
+        }
+    });
+</script>
