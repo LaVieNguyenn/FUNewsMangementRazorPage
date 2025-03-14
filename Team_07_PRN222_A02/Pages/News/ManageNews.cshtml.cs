@@ -45,7 +45,6 @@ public class ManageNewsModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            Console.WriteLine("❌ ModelState is invalid");
             await LoadDataAsync();
             return Page();
         }
@@ -57,52 +56,55 @@ public class ManageNewsModel : PageModel
 
             if (NewArticle.CategoryId <= 0)
             {
-                Console.WriteLine("❌ Invalid CategoryId");
                 ModelState.AddModelError(string.Empty, "Please select a valid category");
                 await LoadDataAsync();
                 return Page();
             }
 
-            Console.WriteLine($"📝 Adding news: {NewArticle.NewsTitle}, Headline: {NewArticle.Headline}, Source: {NewArticle.NewsSource}, Status: {NewArticle.NewsStatus}, Category: {NewArticle.CategoryId}");
             await _newsService.CreateNewsAsync(NewArticle);
-            Console.WriteLine("✅ News added successfully!");
             await LoadDataAsync();
-
-            var notification = new CreateNotificationDTO
-            {
-                Title = $"News {NewArticle.NewsTitle} Uploaded",
-                Message = NewArticle.NewsContent,
-                CreatedBy = _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value,
-                CreatedAt = DateTime.Now,
-                IsRead = false
-            };
-
-            await _notificationService.CreateNotification(notification);
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", notification.CreatedBy, notification.Title, notification.Message);
+            await NotifyNewArticleUpload();
 
             return Page();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error: {ex.Message}");
-            ModelState.AddModelError(string.Empty, $"Lỗi khi thêm bài viết: {ex.Message}");
+            ModelState.AddModelError(string.Empty, $"Error adding article: {ex.Message}");
             await LoadDataAsync();
             return Page();
         }
+    }
+
+    public async Task<IActionResult> OnPostEditAsync()
+    {
+        if (!ModelState.IsValid)
+        {
+            await LoadDataAsync();
+            return Page();
+        }
+
+        try
+        {
+            await _newsService.UpdateNewsAsync(NewArticle); // Sử dụng NewArticle cho việc cập nhật  
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Error editing article: {ex.Message}");
+        }
+
+        await LoadDataAsync();
+        return Page();
     }
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
         try
         {
-            Console.WriteLine($"🗑 Deleting news ID: {id}");
             await _newsService.DeleteNewsAsync(id);
-            Console.WriteLine("✅ News deleted successfully!");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Delete Error: {ex.Message}");
-            ModelState.AddModelError(string.Empty, $"Lỗi khi xóa bài viết: {ex.Message}");
+            ModelState.AddModelError(string.Empty, $"Error deleting article: {ex.Message}");
         }
 
         await LoadDataAsync();
@@ -113,6 +115,20 @@ public class ManageNewsModel : PageModel
     {
         NewsList = (await _newsService.GetAllNewestNewsAsync()).ToList();
         Categories = (await _categoryService.GetAllCategoryAsync()).ToList();
-        Console.WriteLine($"🔄 Loaded {NewsList.Count} news articles & {Categories.Count} categories.");
+    }
+
+    private async Task NotifyNewArticleUpload()
+    {
+        var notification = new CreateNotificationDTO
+        {
+            Title = $"News {NewArticle.NewsTitle} Uploaded",
+            Message = NewArticle.NewsContent,
+            CreatedBy = _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value,
+            CreatedAt = DateTime.Now,
+            IsRead = false
+        };
+
+        await _notificationService.CreateNotification(notification);
+        await _hubContext.Clients.All.SendAsync("ReceiveMessage", notification.CreatedBy, notification.Title, notification.Message);
     }
 }
