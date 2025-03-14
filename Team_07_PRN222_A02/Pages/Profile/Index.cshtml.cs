@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
 using Team_07_PRN222_A02.DAL.Models;
@@ -62,44 +63,41 @@ namespace Team_07_PRN222_A02.Pages.Profile
         }
 
         // Lưu dữ liệu khi submit form trong popup
-        public async Task<IActionResult> OnPostSaveProfileAsync([FromForm] SystemAccount profileData)
+        public async Task<IActionResult> OnPostSaveProfileAsync([FromForm] SystemAccountDTO model)
         {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                return Unauthorized();
-            }
-
-            var existingAccount = await _accountService.GetAccountByEmailAsync(userEmail);
-            if (existingAccount == null)
-            {
-                return NotFound();
-            }
-
-            if (string.IsNullOrWhiteSpace(profileData.AccountName))
-            {
-                return BadRequest(new { error = "Name cannot be empty." });
-            }
-
-            // Cập nhật thông tin
-            existingAccount.AccountName = profileData.AccountName;
-
-            // Nếu có mật khẩu mới, cập nhật
-            if (!string.IsNullOrWhiteSpace(profileData.AccountPassword))
-            {
-                existingAccount.AccountPassword = profileData.AccountPassword;
-            }
-
             try
             {
-                await _accountService.UpdateProfileAsync(existingAccount);
-                return new JsonResult(new { success = true });
+                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return new JsonResult(new { success = false, error = "User not authenticated." });
+                }
+
+                var existingAccount = await _accountService.GetAccountByEmailAsync(userEmail);
+                if (existingAccount == null)
+                {
+                    return new JsonResult(new { success = false, error = "Account not found." });
+                }
+
+                model.AccountID = existingAccount.AccountId; // Gán ID để cập nhật
+                bool isUpdated = await _accountService.UpdateAccountAsync(model);
+
+                if (isUpdated)
+                {
+                    return new JsonResult(new { success = true });
+                }
+                else
+                {
+                    return new JsonResult(new { success = false, error = "Update failed." });
+                }
             }
             catch (Exception ex)
             {
-                return new JsonResult(new { success = false, error = ex.Message });
+                Console.WriteLine("❌ Error in OnPostSaveProfileAsync: " + ex.Message);
+                return new JsonResult(new { success = false, error = "Server error: " + ex.Message });
             }
         }
+
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
