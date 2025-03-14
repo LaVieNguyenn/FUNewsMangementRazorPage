@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
@@ -20,6 +20,8 @@ namespace Team_07_PRN222_A02.Pages.Report
             _reportService = reportService ?? throw new ArgumentNullException(nameof(reportService));
         }
 
+        public Dictionary<string, int> CategoryDistribution { get; private set; } = new();
+
         [BindProperty]
         public DateTime StartDate { get; set; } = DateTime.Today.AddDays(-7);
 
@@ -34,7 +36,16 @@ namespace Team_07_PRN222_A02.Pages.Report
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Categories = await _reportService.GetAllCategoriesAsync();
+            try
+            {
+                Categories = await _reportService.GetAllCategoriesAsync();
+                ReportData = await _reportService.GetReportByPeriodAsync(StartDate, EndDate);
+                CalculateCategoryDistribution();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Lỗi khi tải báo cáo: {ex.Message}");
+            }
             return Page();
         }
 
@@ -49,17 +60,12 @@ namespace Team_07_PRN222_A02.Pages.Report
             try
             {
                 var allData = await _reportService.GetReportByPeriodAsync(StartDate, EndDate);
-
-                if (!string.IsNullOrEmpty(Category))
-                {
-                    ReportData = allData.Where(a => a.CategoryName == Category).ToList();
-                }
-                else
-                {
-                    ReportData = allData;
-                }
+                ReportData = !string.IsNullOrEmpty(Category)
+                    ? allData.Where(a => a.CategoryName == Category).ToList()
+                    : allData;
 
                 Categories = await _reportService.GetAllCategoriesAsync();
+                CalculateCategoryDistribution();
             }
             catch (Exception ex)
             {
@@ -67,6 +73,16 @@ namespace Team_07_PRN222_A02.Pages.Report
             }
 
             return Page();
+        }
+
+        private void CalculateCategoryDistribution()
+        {
+            CategoryDistribution = ReportData
+                .GroupBy(a => a.CategoryName)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            ViewData["CategoryLabels"] = CategoryDistribution.Keys.ToArray();
+            ViewData["CategoryCounts"] = CategoryDistribution.Values.ToArray();
         }
     }
 }
