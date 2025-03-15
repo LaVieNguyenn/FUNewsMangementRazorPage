@@ -19,7 +19,9 @@
             <button class="btn btn-primary" onclick="openEditModal('@Model.Profile.AccountName', '@Model.Profile.AccountEmail')">
                 ✏ Edit Profile
             </button>
-            <button class="btn btn-info" id="openNewsHistoryModal">📜 View News History</button>
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#newsHistoryModal" onclick="loadNewsHistory()">
+                📜 View News History
+            </button>
         </div>
     </div>
 }
@@ -57,6 +59,33 @@ else
         </div>
     </div>
 </div>
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">📰 News History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="newsHistoryTable">
+                        <tr>
+                            <td colspan="3" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Toast Notification -->
 <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
@@ -83,7 +112,14 @@ else
             const result = await response.json();
             if (result.success) {
                 showToast("✅ Profile updated successfully!", "success");
-                new bootstrap.Modal(document.getElementById("editProfileModal")).hide();
+
+                // Cách đóng modal đúng
+                var modalElement = document.getElementById("editProfileModal");
+                var modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
                 setTimeout(() => location.reload(), 1500);
             } else {
                 showToast("⚠ Update failed: " + result.error, "error");
@@ -100,5 +136,42 @@ else
         toast.innerHTML = `${message}`;
         document.getElementById('toast-container').appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
+    }
+
+    function formatDate(isoString) {
+        let date = new Date(isoString);
+        return date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function loadNewsHistory() {
+        let tableBody = document.getElementById("newsHistoryTable");
+        tableBody.innerHTML = `<tr><td colspan="3" class="text-center"><span class="spinner-border spinner-border-sm"></span> Loading...</td></tr>`;
+
+        fetch('/Profile/Index?handler=LoadNewsHistory')
+            .then(response => response.json())
+            .then(data => {
+                tableBody.innerHTML = ""; // Xóa dữ liệu cũ
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
+                } else {
+                    data.forEach(news => {
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td>${news.newsTitle}</td>
+                                <td>${formatDate(news.createdDate)}</td>
+                                <td>
+                                    <a href="/News/View?newsId=${news.newsArticleId}" class="btn btn-primary">View</a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("❌ Error loading news:", error);
+                showToast("⚠ Failed to load news history.", "error");
+                tableBody.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error loading news.</td></tr>`;
+            });
     }
 </script>
