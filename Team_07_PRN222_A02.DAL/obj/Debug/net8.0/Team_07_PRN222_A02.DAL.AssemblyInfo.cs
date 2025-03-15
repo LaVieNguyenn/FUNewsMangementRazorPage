@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Team_07_PRN222_A02.DAL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cb447b0574e623922cb4361adceddb5ebfd18ede")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9da368cd156d0ccb0ec3c49484ebdae858c021d2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Team_07_PRN222_A02.DAL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Team_07_PRN222_A02.DAL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

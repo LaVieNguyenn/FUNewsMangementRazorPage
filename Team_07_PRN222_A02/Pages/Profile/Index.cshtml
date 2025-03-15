@@ -14,11 +14,12 @@
             <p class="card-text">
                 <strong>Email:</strong> @Model.Profile.AccountEmail <br />
                 <strong>Role:</strong> @(Model.Profile.AccountRole == 1 ? "Staff" : "Other") <br />
-                <strong>Account ID:</strong> @Model.Profile.AccountId
             </p>
 
-            <button type="button" class="btn btn-primary" id="openEditModal">✏ Edit Profile</button>
-            <button type="button" class="btn btn-info" id="openNewsHistoryModal">📜 View News History</button>
+            <button class="btn btn-primary" onclick="openEditModal('@Model.Profile.AccountName', '@Model.Profile.AccountEmail')">
+                ✏ Edit Profile
+            </button>
+            <button class="btn btn-info" id="openNewsHistoryModal">📜 View News History</button>
         </div>
     </div>
 }
@@ -32,25 +33,19 @@ else
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <h5 class="modal-title">Edit Profile</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="editProfileForm">
                     <div class="mb-3">
-                        <label for="AccountName" class="form-label">Name</label>
-                        <input type="text" id="AccountName" name="AccountName" class="form-control" />
+                        <label class="form-label">Name</label>
+                        <input type="text" id="editAccountName" name="AccountName" class="form-control" required />
                     </div>
 
                     <div class="mb-3">
-                        <label for="AccountEmail" class="form-label">Email</label>
-                        <input type="email" id="AccountEmail" name="AccountEmail" class="form-control" readonly />
-                        <input type="hidden" name="AccountEmailHidden" id="AccountEmailHidden" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="AccountPassword" class="form-label">New Password (Optional)</label>
-                        <input type="password" id="AccountPassword" name="AccountPassword" class="form-control" />
+                        <label class="form-label">Email</label>
+                        <input type="email" id="editAccountEmail" name="AccountEmail" class="form-control" readonly />
                     </div>
 
                     <div class="modal-footer">
@@ -63,161 +58,47 @@ else
     </div>
 </div>
 
-<!-- Modal News History -->
-<div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newsHistoryModalLabel">📜 News History</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Title</th>
-                            <th>Created Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="newsHistoryContent">
-                        <tr>
-                            <td colspan="3" class="text-center">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Toast Notification -->
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
 
-<!-- Modal News Details -->
-<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newsDetailModalLabel">📰 News Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="newsDetailContent">
-                <p class="text-center">Loading...</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Load jQuery & Bootstrap -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // Mở modal Edit Profile
-        $("#openEditModal").click(function () {
-            $.get("/Profile/Index?handler=LoadProfile")
-                .done(function (data) {
-                    $("#AccountName").val(data.accountName);
-                    $("#AccountEmail").val(data.accountEmail);
-                    $("#AccountEmailHidden").val(data.accountEmail);
-                    $("#editProfileModal").modal("show");
-                })
-                .fail(function () {
-                    alert("❌ Error loading profile data.");
-                });
-        });
+    function openEditModal(accountName, accountEmail) {
+        document.getElementById('editAccountName').value = accountName;
+        document.getElementById('editAccountEmail').value = accountEmail;
 
-        function showToast(message, type = 'success') {
-            let toastContainer = document.getElementById('toast-container');
-            let toast = document.createElement('div');
-            toast.classList.add('toast', `toast-${type}`);
-            toast.innerHTML = `${message} <div class='toast-progress'></div>`;
-            toastContainer.appendChild(toast);
+        var editModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+        editModal.show();
+    }
 
-            setTimeout(() => {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+    document.getElementById("editProfileForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-        // Submit form qua AJAX
-        $("#editProfileForm").submit(function (event) {
-            event.preventDefault();
-            $("#AccountEmail").prop("disabled", false);
+        const formData = new FormData(this);
+        try {
+            const response = await fetch("/Profile/Index?handler=SaveProfile", {
+                method: "POST",
+                body: formData
+            });
 
-            var formData = $(this).serialize();
-
-            $.post("/Profile/Index?handler=SaveProfile", formData)
-                .done(function (response) {
-                    if (response.success) {
-                        showToast("✅ Profile updated successfully!", "success");
-                        $("#editProfileModal").modal("hide");
-                        setTimeout(() => location.reload(), 1500);
-                    } else {
-                        showToast("⚠ Update failed: " + response.error, "error");
-                    }
-                })
-                .fail(function (xhr) {
-                    showToast("❌ Error: " + xhr.responseText, "error");
-                });
-        });
-
-        // Mở modal News History
-           $(document).ready(function () {
-        $("#openNewsHistoryModal").click(function () {
-            $("#newsHistoryModal").modal("show"); // Mở modal ngay lập tức
-            loadNewsHistory(); // Gọi API để lấy dữ liệu
-        });
-
-        function loadNewsHistory() {
-            $("#newsHistoryContent").html("<tr><td colspan='3' class='text-center text-warning'>Loading...</td></tr>");
-
-            $.get("/Profile/Index?handler=LoadNewsHistory")
-                .done(function (data) {
-                    let content = "";
-                    if (!data || data.length === 0) {
-                        content = "<tr><td colspan='3' class='text-center text-danger'>No news articles found.</td></tr>";
-                    } else {
-                        data.forEach(news => {
-                            content += `
-                                <tr>
-                                    <td>${news.newsTitle}</td>
-                                    <td>${news.createdDate}</td>
-                                    <td>
-                                        <button class="btn btn-info view-news-btn" data-id="${news.newsArticleId}">
-                                            View
-                                        </button>
-                                    </td>
-                                </tr>`;
-                        });
-                    }
-                    $("#newsHistoryContent").html(content);
-                })
-                .fail(function () {
-                    $("#newsHistoryContent").html("<tr><td colspan='3' class='text-danger text-center'>⚠ Error loading news history.</td></tr>");
-                });
-        }
-
-        // Bắt sự kiện click vào nút View trong danh sách bài viết
-        $(document).on("click", ".view-news-btn", function () {
-            let newsId = $(this).data("id");
-            loadNewsDetails(newsId);
-        });
-
-        function loadNewsDetails(newsId) {
-            $("#newsDetailContent").html("<p class='text-center text-warning'>Loading...</p>");
-            $("#newsDetailModal").modal("show");
-
-            $.get(`/News/Details?id=${newsId}`)
-                .done(function (data) {
-                    $("#newsDetailContent").html(`
-                        <h5>${data.newsTitle}</h5>
-                        <p><strong>Date:</strong> ${data.createdDate}</p>
-                        <p>${data.newsContent}</p>
-                    `);
-                })
-                .fail(function () {
-                    $("#newsDetailContent").html("<p class='text-danger text-center'>⚠ Error loading news details.</p>");
-                });
+            const result = await response.json();
+            if (result.success) {
+                showToast("✅ Profile updated successfully!", "success");
+                new bootstrap.Modal(document.getElementById("editProfileModal")).hide();
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast("⚠ Update failed: " + result.error, "error");
+            }
+        } catch (error) {
+            console.error("❌ Error:", error);
+            showToast("⚠ Server error.", "error");
         }
     });
 
+    function showToast(message, type = 'success') {
+        let toast = document.createElement('div');
+        toast.classList.add('toast', `toast-${type}`);
+        toast.innerHTML = `${message}`;
+        document.getElementById('toast-container').appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
 </script>

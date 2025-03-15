@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
 using Team_07_PRN222_A02.DAL.Models;
+using AutoMapper; // Nếu sử dụng AutoMapper
 
 namespace Team_07_PRN222_A02.Pages.Profile
 {
@@ -13,14 +17,16 @@ namespace Team_07_PRN222_A02.Pages.Profile
     {
         private readonly ISystemAccountService _accountService;
         private readonly INewArticleService _newsService;
+        private readonly IMapper _mapper; // Sử dụng AutoMapper
 
-        public IndexModel(ISystemAccountService accountService, INewArticleService newsService)
+        public IndexModel(ISystemAccountService accountService, INewArticleService newsService, IMapper mapper)
         {
             _accountService = accountService;
             _newsService = newsService;
+            _mapper = mapper;
         }
 
-        public SystemAccount Profile { get; set; }
+        public SystemAccountDTO Profile { get; set; }
 
         // ✅ Hàm tiện ích: Lấy email người dùng từ Claims
         private string GetUserEmail()
@@ -36,12 +42,13 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return RedirectToPage("/Authentication/Login");
             }
 
-            Profile = await _accountService.GetAccountByEmailAsync(userEmail);
-            if (Profile == null)
+            var account = await _accountService.GetAccountByEmailAsync(userEmail);
+            if (account == null)
             {
                 return NotFound();
             }
 
+            Profile = _mapper.Map<SystemAccountDTO>(account); // Chuyển đổi sang DTO
             return Page();
         }
 
@@ -60,11 +67,7 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return NotFound();
             }
 
-            return new JsonResult(new
-            {
-                accountName = user.AccountName,
-                accountEmail = user.AccountEmail
-            });
+            return new JsonResult(_mapper.Map<SystemAccountDTO>(user)); // Trả về DTO
         }
 
         // ✅ Lưu Profile khi Submit
@@ -84,14 +87,13 @@ namespace Team_07_PRN222_A02.Pages.Profile
                     return new JsonResult(new { success = false, error = "Account not found." });
                 }
 
-                var updatedAccount = new SystemAccountDTO
-                {
-                    AccountName = model.AccountName ?? existingAccount.AccountName,
-                    AccountEmail = existingAccount.AccountEmail, // Không thay đổi email
-                    AccountRole = existingAccount.AccountRole
-                };
+                // Chỉ cập nhật tên, không cập nhật email hoặc password
+                existingAccount.AccountName = model.AccountName ?? existingAccount.AccountName;
 
-                bool isUpdated = await _accountService.UpdateAccountAsync(updatedAccount);
+                // Chuyển đổi sang DTO trước khi cập nhật
+                var accountDto = _mapper.Map<SystemAccountDTO>(existingAccount);
+
+                bool isUpdated = await _accountService.UpdateAccountAsync(accountDto);
 
                 return new JsonResult(new { success = isUpdated });
             }
@@ -101,7 +103,6 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return new JsonResult(new { success = false, error = "Server error: " + ex.Message });
             }
         }
-
 
         // ✅ Load danh sách bài báo khi mở modal News History
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
@@ -141,6 +142,5 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return new JsonResult(new { error = "Server error: " + ex.Message });
             }
         }
-
     }
 }
