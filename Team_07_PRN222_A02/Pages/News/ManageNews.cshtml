@@ -8,6 +8,22 @@
     <div class="col-lg-10 col-md-10 col-sm-12 mx-auto p-4 shadow-lg rounded bg-white">
         <h2 class="text-center mb-4">Manage News</h2>
 
+        <!-- Hiển thị thông báo nếu có -->
+        @if (!string.IsNullOrEmpty(ViewData["SuccessMessage"] as string))
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <!-- Form Thêm Bài Viết -->
         <form method="post" asp-page-handler="Add">
             <div class="mb-4">
@@ -158,4 +174,4 @@
             }
         }
     </script>
-</div>  
+</div>

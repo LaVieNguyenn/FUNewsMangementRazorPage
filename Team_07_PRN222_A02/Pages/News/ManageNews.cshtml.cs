@@ -1,16 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.CategoryService;
-using Microsoft.AspNetCore.SignalR;
-using Team_07_PRN222_A02.Hubs;
+using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.NotificationService;
-using Microsoft.AspNetCore.Http;
+using Team_07_PRN222_A02.Hubs;
 
 public class ManageNewsModel : PageModel
 {
@@ -46,7 +41,6 @@ public class ManageNewsModel : PageModel
         if (!ModelState.IsValid)
         {
             await LoadDataAsync();
-
             return Page();
         }
 
@@ -66,6 +60,8 @@ public class ManageNewsModel : PageModel
             await LoadDataAsync();
             await NotifyNewArticleUpload();
 
+            // Thêm thông báo thành công
+            ViewData["SuccessMessage"] = "News article added successfully!";
             return Page();
         }
         catch (Exception ex)
@@ -87,10 +83,13 @@ public class ManageNewsModel : PageModel
         try
         {
             await _newsService.UpdateNewsAsync(NewArticle); // Sử dụng NewArticle cho việc cập nhật
+            // Thêm thông báo thành công
+            ViewData["SuccessMessage"] = "News article updated successfully!";
         }
         catch (Exception ex)
         {
-            ModelState.AddModelError(string.Empty, $"Error editing article: {ex.Message}");
+            ModelState.AddModelError(string.Empty, "News article updated successfully!");
+            ViewData["ErrorMessage"] = "News article updated successfully!";
         }
 
         await LoadDataAsync();
@@ -102,10 +101,13 @@ public class ManageNewsModel : PageModel
         try
         {
             await _newsService.DeleteNewsAsync(id);
+            // Thêm thông báo thành công
+            ViewData["SuccessMessage"] = "News article deleted successfully!";
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, $"Error deleting article: {ex.Message}");
+            ViewData["ErrorMessage"] = $"Error deleting article: {ex.Message}";
         }
 
         await LoadDataAsync();
