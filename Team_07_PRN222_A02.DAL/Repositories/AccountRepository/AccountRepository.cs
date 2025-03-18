@@ -59,18 +59,8 @@ namespace Team_07_PRN222_A02.DAL.Repositories.AccountRepository
 
         public async Task UpdateAccountAsync(SystemAccount account)
         {
-            try
-            {
-                _context.SystemAccounts.Update(account);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Database Error: " + ex.Message);
-                throw;
-            }
+            _context.SystemAccounts.Update(account);
+            await _context.SaveChangesAsync();
         }
-
-
     }
 }

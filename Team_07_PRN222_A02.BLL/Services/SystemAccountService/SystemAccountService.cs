@@ -99,7 +99,21 @@
                 return false;
             }
         }
-
+        public async Task<SystemAccountDTO> GetCurrentUserProfileAsync(string email)
+        {
+            var account = await _unitOfWork.AccountRepository.GetAccountByEmailAsync(email);
+            if (account == null)
+            {
+                return null;
+            }
+            return new SystemAccountDTO
+            {
+                AccountID = account.AccountId,
+                AccountName = account.AccountName,
+                AccountEmail = account.AccountEmail,
+                AccountRole = account.AccountRole
+            };
+        }
 
         Task ISystemAccountService.DeleteAccount(int accountId)
             {

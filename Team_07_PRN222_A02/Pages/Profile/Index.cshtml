@@ -16,7 +16,7 @@
                 <strong>Role:</strong> @(Model.Profile.AccountRole == 1 ? "Staff" : "Other") <br />
             </p>
 
-            <button class="btn btn-primary" onclick="openEditModal('@Model.Profile.AccountName', '@Model.Profile.AccountEmail')">
+            <button class="btn btn-primary" onclick="openEditProfileModal('@Model.Profile.AccountName', '@Model.Profile.AccountEmail')">
                 ✏ Edit Profile
             </button>
             <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#newsHistoryModal" onclick="loadNewsHistory()">
@@ -59,7 +59,8 @@ else
         </div>
     </div>
 </div>
-<!-- Modal Bootstrap -->
+
+<!-- Modal View News History -->
 <div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -87,11 +88,17 @@ else
     </div>
 </div>
 
-<!-- Toast Notification -->
-<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+<!-- Load Bootstrap & jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- JavaScript -->
 <script>
-    function openEditModal(accountName, accountEmail) {
+    function openEditProfileModal(accountName, accountEmail) {
+        console.log("🔵 Opening Edit Profile Modal...");
+
         document.getElementById('editAccountName').value = accountName;
         document.getElementById('editAccountEmail').value = accountEmail;
 
@@ -111,46 +118,24 @@ else
 
             const result = await response.json();
             if (result.success) {
-                showToast("✅ Profile updated successfully!", "success");
-
-                // Cách đóng modal đúng
-                var modalElement = document.getElementById("editProfileModal");
-                var modalInstance = bootstrap.Modal.getInstance(modalElement);
-                if (modalInstance) {
-                    modalInstance.hide();
-                }
-
+                alert("✅ Profile updated successfully!");
+                new bootstrap.Modal(document.getElementById("editProfileModal")).hide();
                 setTimeout(() => location.reload(), 1500);
             } else {
-                showToast("⚠ Update failed: " + result.error, "error");
+                alert("⚠ Update failed: " + result.error);
             }
         } catch (error) {
             console.error("❌ Error:", error);
-            showToast("⚠ Server error.", "error");
+            alert("⚠ Server error.");
         }
     });
 
-    function showToast(message, type = 'success') {
-        let toast = document.createElement('div');
-        toast.classList.add('toast', `toast-${type}`);
-        toast.innerHTML = `${message}`;
-        document.getElementById('toast-container').appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-
-    function formatDate(isoString) {
-        let date = new Date(isoString);
-        return date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
     function loadNewsHistory() {
-        let tableBody = document.getElementById("newsHistoryTable");
-        tableBody.innerHTML = `<tr><td colspan="3" class="text-center"><span class="spinner-border spinner-border-sm"></span> Loading...</td></tr>`;
-
         fetch('/Profile/Index?handler=LoadNewsHistory')
             .then(response => response.json())
             .then(data => {
-                tableBody.innerHTML = ""; // Xóa dữ liệu cũ
+                let tableBody = document.getElementById("newsHistoryTable");
+                tableBody.innerHTML = "";
 
                 if (data.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
@@ -159,7 +144,7 @@ else
                         tableBody.innerHTML += `
                             <tr>
                                 <td>${news.newsTitle}</td>
-                                <td>${formatDate(news.createdDate)}</td>
+                                <td>${news.createdDate}</td>
                                 <td>
                                     <a href="/News/View?newsId=${news.newsArticleId}" class="btn btn-primary">View</a>
                                 </td>
@@ -170,8 +155,7 @@ else
             })
             .catch(error => {
                 console.error("❌ Error loading news:", error);
-                showToast("⚠ Failed to load news history.", "error");
-                tableBody.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error loading news.</td></tr>`;
+                document.getElementById("newsHistoryTable").innerHTML = `<tr><td colspan="3" class="text-center">Error loading news.</td></tr>`;
             });
     }
 </script>
