@@ -6,6 +6,7 @@ using Team_07_PRN222_A02.BLL.Services.CategoryService;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.NotificationService;
 using Team_07_PRN222_A02.Hubs;
+using Team_07_PRN222_A02.DAL.Models;
 
 public class ManageNewsModel : PageModel
 {
@@ -26,9 +27,10 @@ public class ManageNewsModel : PageModel
 
     public List<NewsArticleDTO> NewsList { get; set; } = new();
     public List<CategoryDTO> Categories { get; set; } = new();
+    public List<Tag> Tags { get; set; } = new(); // ✅ Initialize list to avoid null reference issues
 
     [BindProperty]
-    public NewsArticleUpdateDTO NewArticle { get; set; } = new NewsArticleUpdateDTO();
+    public NewsArticleUpdateDTO NewArticle { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -56,11 +58,12 @@ public class ManageNewsModel : PageModel
                 return Page();
             }
 
+            // Ensure Tag selection is processed properly
             await _newsService.CreateNewsAsync(NewArticle);
+
             await LoadDataAsync();
             await NotifyNewArticleUpload();
 
-            // Thêm thông báo thành công
             ViewData["SuccessMessage"] = "News article added successfully!";
             return Page();
         }
@@ -82,8 +85,7 @@ public class ManageNewsModel : PageModel
 
         try
         {
-            await _newsService.UpdateNewsAsync(NewArticle); // Sử dụng NewArticle cho việc cập nhật
-            // Thêm thông báo thành công
+            await _newsService.UpdateNewsAsync(NewArticle);
             ViewData["SuccessMessage"] = "News article updated successfully!";
         }
         catch (Exception ex)
@@ -101,7 +103,6 @@ public class ManageNewsModel : PageModel
         try
         {
             await _newsService.DeleteNewsAsync(id);
-            // Thêm thông báo thành công
             ViewData["SuccessMessage"] = "News article deleted successfully!";
         }
         catch (Exception ex)
@@ -118,15 +119,25 @@ public class ManageNewsModel : PageModel
     {
         NewsList = (await _newsService.GetAllNewestNewsAsync()).ToList();
         Categories = (await _categoryService.GetAllCategoryAsync()).ToList();
+
+        // Convert TagDTOs to Tags
+        var tagDTOs = await _newsService.GetAllTagsAsync();
+        Tags = tagDTOs?.Select(tagDto => new Tag
+        {
+            TagId = tagDto.TagId,
+            TagName = tagDto.TagName
+        }).ToList() ?? new List<Tag>();
     }
 
     private async Task NotifyNewArticleUpload()
     {
+        var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? "Unknown User";
+
         var notification = new CreateNotificationDTO
         {
             Title = $"News {NewArticle.NewsTitle} Uploaded",
             Message = NewArticle.NewsContent,
-            CreatedBy = _httpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value,
+            CreatedBy = userName,
             CreatedAt = DateTime.Now,
             IsRead = false
         };
