@@ -10,7 +10,7 @@
 {
     <div class="card shadow-lg p-4 mb-5 bg-white rounded">
         <div class="card-body">
-            <h4 class="card-title">@Model.Profile.AccountName</h4>
+            <h4 class="card-title" id="displayAccountName">@Model.Profile.AccountName</h4>
             <p class="card-text">
                 <strong>Email:</strong> @Model.Profile.AccountEmail <br />
                 <strong>Role:</strong> @(Model.Profile.AccountRole == 1 ? "Staff" : "Other") <br />
@@ -39,7 +39,8 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editProfileForm">
+                <form id="editProfileForm" method="post" asp-page-handler="SaveProfile">
+                    @Html.AntiForgeryToken()
                     <div class="mb-3">
                         <label class="form-label">Name</label>
                         <input type="text" id="editAccountName" name="AccountName" class="form-control" required />
@@ -88,6 +89,24 @@ else
     </div>
 </div>
 
+<!-- Modal News Detail -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">📖 News Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Title:</strong> <span id="newsTitle"></span></p>
+                <p><strong>Created Date:</strong> <span id="newsCreatedDate"></span></p>
+                <hr>
+                <p id="newsContent"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Load Bootstrap & jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
@@ -97,8 +116,6 @@ else
 <!-- JavaScript -->
 <script>
     function openEditProfileModal(accountName, accountEmail) {
-        console.log("🔵 Opening Edit Profile Modal...");
-
         document.getElementById('editAccountName').value = accountName;
         document.getElementById('editAccountEmail').value = accountEmail;
 
@@ -110,17 +127,29 @@ else
         event.preventDefault();
 
         const formData = new FormData(this);
+        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+
+        if (!tokenElement) {
+            alert("⚠ Error: Missing verification token!");
+            return;
+        }
+
         try {
             const response = await fetch("/Profile/Index?handler=SaveProfile", {
                 method: "POST",
+                headers: { 'RequestVerificationToken': tokenElement.value },
                 body: formData
             });
 
             const result = await response.json();
             if (result.success) {
                 alert("✅ Profile updated successfully!");
-                new bootstrap.Modal(document.getElementById("editProfileModal")).hide();
-                setTimeout(() => location.reload(), 1500);
+
+                // Ẩn modal
+                bootstrap.Modal.getInstance(document.getElementById("editProfileModal")).hide();
+
+                // Cập nhật giao diện mà không cần reload
+                document.getElementById("displayAccountName").textContent = formData.get("AccountName");
             } else {
                 alert("⚠ Update failed: " + result.error);
             }
@@ -135,27 +164,35 @@ else
             .then(response => response.json())
             .then(data => {
                 let tableBody = document.getElementById("newsHistoryTable");
-                tableBody.innerHTML = "";
-
-                if (data.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
-                } else {
-                    data.forEach(news => {
-                        tableBody.innerHTML += `
-                            <tr>
-                                <td>${news.newsTitle}</td>
-                                <td>${news.createdDate}</td>
-                                <td>
-                                    <a href="/News/View?newsId=${news.newsArticleId}" class="btn btn-primary">View</a>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
+                tableBody.innerHTML = data.length
+                    ? data.map(news => `
+                        <tr>
+                            <td>${news.newsTitle}</td>
+                            <td>${news.createdDate}</td>
+                            <td><button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button></td>
+                        </tr>
+                    `).join("")
+                    : `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
             })
             .catch(error => {
-                console.error("❌ Error loading news:", error);
+                console.error("❌ Error:", error);
                 document.getElementById("newsHistoryTable").innerHTML = `<tr><td colspan="3" class="text-center">Error loading news.</td></tr>`;
             });
+    }
+
+    function openNewsDetail(newsId) {
+        fetch(`/Profile/Index?handler=LoadNewsDetail&newsId=${newsId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("newsTitle").textContent = data.title;
+                    document.getElementById("newsCreatedDate").textContent = data.createdDate;
+                    document.getElementById("newsContent").innerHTML = data.content;
+                    new bootstrap.Modal(document.getElementById("newsDetailModal")).show();
+                } else {
+                    alert("⚠ " + data.error);
+                }
+            })
+            .catch(error => console.error("❌ Error:", error));
     }
 </script>

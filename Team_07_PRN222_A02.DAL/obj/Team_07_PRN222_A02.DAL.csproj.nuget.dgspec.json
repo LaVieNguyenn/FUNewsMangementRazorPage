@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lehuy\\Downloads\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {}
+    "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lehuy\\Downloads\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
+    "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lehuy\\Downloads\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+        "projectUniqueName": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
         "projectName": "Team_07_PRN222_A02.DAL",
-        "projectPath": "C:\\Users\\lehuy\\Downloads\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
-        "packagesPath": "C:\\Users\\lehuy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lehuy\\Downloads\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\obj\\",
+        "projectPath": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+        "packagesPath": "C:\\Users\\Hp\\.nuget\\packages\\",
+        "outputPath": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\lehuy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -95,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
