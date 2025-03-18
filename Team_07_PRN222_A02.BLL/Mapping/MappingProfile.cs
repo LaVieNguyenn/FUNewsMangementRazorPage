@@ -21,6 +21,7 @@ namespace Team_07_PRN222_A02.BLL.Mapping
 
             CreateMap<NotificationDTO, Notification>().ReverseMap();
             CreateMap<CreateNotificationDTO, Notification>().ReverseMap();
+            CreateMap<Tag, TagDTO>().ReverseMap();
 
             CreateMap<SystemAccount, SystemAccountDTO>().ReverseMap();
         }
