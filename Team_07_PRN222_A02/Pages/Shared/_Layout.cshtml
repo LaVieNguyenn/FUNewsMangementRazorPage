@@ -121,14 +121,14 @@
 
                                         @if (userRole == "Staff")
                                         {
-                                            <a class="dropdown-item" asp-page="Category/Index">Manage Category</a>
-                                            <a class="dropdown-item" asp-page="Profile/Index">Go to My profile</a>
-                                            <a class="dropdown-item" asp-page="News/ManageNews">Manage News</a>
+                                            <a class="dropdown-item" asp-page="/Category/Index">Manage Category</a>
+                                            <a class="dropdown-item" asp-page="/Profile/Index">Go to My profile</a>
+                                            <a class="dropdown-item" asp-page="/News/ManageNews">Manage News</a>
                                         }
                                         @if (userRole == "Admin")
                                         {
-                                            <a class="dropdown-item" asp-page="AdminPage/ManageAccount">Manage Account</a>
-                                            <a class="dropdown-item" asp-page="Report/Report">View Reports</a>
+                                            <a class="dropdown-item" asp-page="/AdminPage/ManageAccount">Manage Account</a>
+                                            <a class="dropdown-item" asp-page="/Report/Report">View Reports</a>
                                         }
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item text-danger d-flex align-items-center" asp-page="/Authentication/Login" asp-page-handler="Logout">
