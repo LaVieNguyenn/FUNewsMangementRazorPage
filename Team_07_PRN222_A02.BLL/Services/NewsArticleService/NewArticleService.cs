@@ -111,5 +111,25 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
             Console.WriteLine($"✅ {newsList.Count} articles found for author ID: {authorId}");
             return newsList;
         }
+
+        public async Task<NewsArticleDTO> GetNewsAsyncById(int id)
+        {
+            var news = await _unitOfWork.NewsArticleRepository
+                .GetByIdAsync(id);
+            return new NewsArticleDTO
+            {
+                NewsArticleId = id,
+                AccountName = news.CreatedBy.AccountName,
+                CreatedDate = news.CreatedDate,
+                CategoryId = news.CategoryId.ToString(),
+                CategoryName = news.Category.CategoryName,
+                Headline = news.Headline,
+                NewsContent = news.NewsContent,
+                NewsSource = news.NewsSource,
+                NewsStatus = news.NewsStatus,
+                NewsTitle = news.NewsTitle,
+                Tags = news.Tags,
+            };
+        }
     }
 }

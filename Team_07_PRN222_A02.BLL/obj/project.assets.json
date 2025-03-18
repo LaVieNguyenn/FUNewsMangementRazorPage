@@ -3068,23 +3068,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Hp\\.nuget\\packages\\": {},
+    "C:\\Users\\PhiHung\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.BLL\\Team_07_PRN222_A02.BLL.csproj",
+      "projectUniqueName": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.BLL\\Team_07_PRN222_A02.BLL.csproj",
       "projectName": "Team_07_PRN222_A02.BLL",
-      "projectPath": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.BLL\\Team_07_PRN222_A02.BLL.csproj",
-      "packagesPath": "C:\\Users\\Hp\\.nuget\\packages\\",
-      "outputPath": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.BLL\\obj\\",
+      "projectPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.BLL\\Team_07_PRN222_A02.BLL.csproj",
+      "packagesPath": "C:\\Users\\PhiHung\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.BLL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PhiHung\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3100,8 +3100,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
-              "projectPath": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj"
+            "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
+              "projectPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj"
             }
           }
         }
@@ -3143,7 +3143,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

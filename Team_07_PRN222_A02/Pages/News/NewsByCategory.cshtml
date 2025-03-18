@@ -12,7 +12,7 @@
                 {
                     <div class="blog-box">
                         <div class="post-media">
-                            <a href="single.html" title="">
+                            <a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">
                                 <img src="~/upload/blog_05.jpg" alt="" class="img-fluid">
                                 <div class="hovereffect">
                                     <span></span>
@@ -20,7 +20,7 @@
                             </a>
                         </div><!-- end media -->
                         <div class="blog-meta big-meta">
-                            <h4><a href="single.html" title="">@i.NewsTitle</a></h4>
+                            <h4><a asp-page="/News/NewsDetail" asp-route-id="{@i.NewsArticleId }" title="">@i.NewsTitle</a></h4>
                             <p>@i.NewsContent</p>
                             <small><a href="blog-category-01.html" title="">@i.CategoryName</a></small>
                             <small><a href="single.html" title="">@i.CreatedDate</a></small>
@@ -45,7 +45,7 @@
                 {
                     <div class="blog-box">
                         <div class="post-media">
-                            <a href="single.html" title="">
+                            <a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">
                                 <img src="~/upload/blog_01.jpg" alt="" class="img-fluid">
                                 <div class="hovereffect">
                                     <span></span>
@@ -53,7 +53,7 @@
                             </a>
                         </div><!-- end media -->
                         <div class="blog-meta">
-                            <h4><a href="single.html" title="">@i.NewsTitle</a></h4>
+                            <h4><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.NewsTitle</a></h4>
                             <small><a href="blog-category-01.html" title="">@i.CategoryName</a></small>
                             <small><a href="blog-category-01.html" title="">@i.CreatedDate</a></small>
                         </div><!-- end meta -->
@@ -68,7 +68,7 @@
                 {
                     <div class="blog-box">
                         <div class="post-media">
-                            <a href="single.html" title="">
+                            <a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">
                                 <img src="~/upload/blog_03.jpg" alt="" class="img-fluid">
                                 <div class="hovereffect">
                                     <span></span>
@@ -76,7 +76,7 @@
                             </a>
                         </div><!-- end media -->
                         <div class="blog-meta">
-                            <h4><a href="single.html" title="">@i.NewsTitle</a></h4>
+                            <h4><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.NewsTitle</a></h4>
                             <small><a href="blog-category-01.html" title="">@i.CategoryName</a>, <a href="blog-category-01.html" title="">@i.AccountName</a></small>
                             <small><a href="blog-category-01.html" title="">@i.CreatedDate</a></small>
                         </div><!-- end meta -->
@@ -101,7 +101,7 @@
                 <div class="blog-box row">
                     <div class="col-md-4">
                         <div class="post-media">
-                            <a href="single.html" title="">
+                            <a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">
                                 <img src="~/upload/blog_square_01.jpg" alt="" class="img-fluid">
                                 <div class="hovereffect"></div>
                             </a>
@@ -109,10 +109,10 @@
                     </div><!-- end col -->
 
                     <div class="blog-meta big-meta col-md-8">
-                        <h4><a href="single.html" title="">@i.NewsTitle</a></h4>
+                        <h4><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.NewsTitle</a></h4>
                         <p>@i.NewsContent</p>
                         <small><a href="blog-category-01.html" title="">@i.CategoryName</a></small>
-                        <small><a href="single.html" title="">@i.CreatedDate</a></small>
+                        <small><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.CreatedDate</a></small>
                         <small><a href="blog-author.html" title="">by @i.AccountName</a></small>
                     </div><!-- end meta -->
                 </div><!-- end blog-box -->
@@ -127,7 +127,7 @@
                 <div class="blog-box row">
                     <div class="col-md-4">
                         <div class="post-media">
-                            <a href="single.html" title="">
+                            <a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">
                                 <img src="~/upload/blog_square_01.jpg" alt="" class="img-fluid">
                                 <div class="hovereffect"></div>
                             </a>
@@ -135,10 +135,10 @@
                     </div><!-- end col -->
 
                     <div class="blog-meta big-meta col-md-8">
-                        <h4><a href="single.html" title="">@i.NewsTitle</a></h4>
+                        <h4><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.NewsTitle</a></h4>
                         <p>@i.NewsContent</p>
                         <small><a href="blog-category-01.html" title="">@i.CategoryName</a></small>
-                        <small><a href="single.html" title="">@i.CreatedDate</a></small>
+                        <small><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.CreatedDate</a></small>
                         <small><a href="blog-author.html" title="">by @i.AccountName</a></small>
                     </div><!-- end meta -->
                 </div>
@@ -156,7 +156,7 @@
         {
             <div class="blog-box">
                 <div class="post-media">
-                <a href="single.html" title="">
+                    <a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">
                     <img src="~/upload/blog_10.jpg" alt="" class="img-fluid">
                     <div class="hovereffect">
                         <span class="videohover"></span>
@@ -164,7 +164,7 @@
                 </a>
             </div><!-- end media -->
             <div class="blog-meta">
-                <h4><a href="single.html" title="">@i.NewsTitle</a></h4>
+                    <h4><a asp-page="/News/NewsDetail" asp-route-id="@i.NewsArticleId" title="">@i.NewsTitle</a></h4>
                 <small><a href="blog-category-01.html" title="">@i.CategoryName</a></small>
                 <small><a href="blog-category-01.html" title="">@i.CreatedDate</a></small>
             </div><!-- end meta -->

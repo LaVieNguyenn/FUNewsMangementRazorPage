@@ -26,7 +26,11 @@ namespace Team_07_PRN222_A02.DAL.Repositories.NewsRepository
 
         public async Task<NewsArticle?> GetByIdAsync(int id)
         {
-            return await _context.NewsArticles.FindAsync(id);
+            return await _context.NewsArticles
+                                 .Include(x => x.Category)
+                                 .Include(x => x.CreatedBy)
+                                 .Include(x => x.Tags)
+                                 .FirstOrDefaultAsync(x => x.NewsArticleId == id);
         }
 
         public async Task InsertAsync(NewsArticle obj)

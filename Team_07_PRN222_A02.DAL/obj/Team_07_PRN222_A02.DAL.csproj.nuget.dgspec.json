@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {}
+    "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {}
   },
   "projects": {
-    "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
+    "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+        "projectUniqueName": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
         "projectName": "Team_07_PRN222_A02.DAL",
-        "projectPath": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
-        "packagesPath": "C:\\Users\\Hp\\.nuget\\packages\\",
-        "outputPath": "D:\\E\\New folder (2)\\Team_07_PRN222_A02.DAL\\obj\\",
+        "projectPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+        "packagesPath": "C:\\Users\\PhiHung\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PhiHung\\Documents\\code\\DotNet\\Demo\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PhiHung\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -96,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

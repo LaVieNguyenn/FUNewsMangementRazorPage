@@ -10,7 +10,7 @@
                         <div class="shadow-desc">
                             <div class="blog-meta">
                                 <span class="bg-aqua"><a href="blog-category-01.html" title="">@Model.ElementAt(0).CategoryName</a></span>
-                                <h4><a href="single.html" title="">@Model.ElementAt(0).NewsTitle</a></h4>
+                                <h4><a asp-page="News/NewsDetail" asp-route-id="@Model.ElementAt(0).NewsArticleId" title="">@Model.ElementAt(0).NewsTitle</a></h4>
                                 <small><a href="single.html" title="">@Model.ElementAt(0).CreatedDate</a></small>
                                 <small><a href="blog-author.html" title="">@Model.ElementAt(0).AccountName</a></small>
                             </div><!-- end meta -->
@@ -27,7 +27,7 @@
                             <div class="blog-meta">
                                 <span class="bg-green"><a href="blog-category-01.html" title="">@Model.ElementAt(1).CategoryName</a></span>
                                 <h4><a href="single.html" title="">@Model.ElementAt(1).NewsTitle</a></h4>
-                                <small><a href="single.html" title="">@Model.ElementAt(1).CreatedDate</a></small>
+                                <small><a asp-page="/News/NewsDetail" asp-route-id="@Model.ElementAt(1).NewsArticleId" title="">@Model.ElementAt(1).CreatedDate</a></small>
                                 <small><a href="blog-author.html" title="">@Model.ElementAt(1).AccountName</a></small>
                             </div><!-- end meta -->
                         </div><!-- end shadow-desc -->
@@ -40,7 +40,7 @@
                         <div class="shadow-desc">
                             <div class="blog-meta">
                                 <span class="bg-green"><a href="blog-category-01.html" title="">@Model.ElementAt(2).CategoryName</a></span>
-                                <h4><a href="single.html" title="">@Model.ElementAt(2).NewsTitle</a></h4>
+                                <h4><a asp-page="/News/NewsDetail" asp-route-id="@Model.ElementAt(2).NewsArticleId" title="">@Model.ElementAt(2).NewsTitle</a></h4>
                             </div><!-- end meta -->
                         </div><!-- end shadow-desc -->
                     </div><!-- end shadow -->
@@ -52,7 +52,7 @@
                         <div class="shadow-desc">
                             <div class="blog-meta">
                                 <span class="bg-green"><a href="blog-category-01.html" title="">@Model.ElementAt(3).CategoryName</a></span>
-                                <h4><a href="single.html" title="">@Model.ElementAt(3).NewsTitle</a></h4>
+                                <h4><a asp-page ="/News/NewsDetail" asp-route-id="@Model.ElementAt(3).NewsArticleId" title="">@Model.ElementAt(3).NewsTitle</a></h4>
                             </div><!-- end meta -->
                         </div><!-- end shadow-desc -->
                     </div><!-- end shadow -->
@@ -66,8 +66,8 @@
                         <div class="shadow-desc">
                             <div class="blog-meta">
                                 <span class="bg-aqua"><a href="blog-category-01.html" title="">@Model.ElementAt(4).CategoryName</a></span>
-                                <h4><a href="single.html" title="">@Model.ElementAt(4).NewsTitle</a></h4>
-                                <small><a href="single.html" title="">@Model.ElementAt(4).CreatedDate</a></small>
+                                <h4><a asp-page="/News/NewsDetail" asp-route-id="@Model.ElementAt(4).NewsArticleId" title="">@Model.ElementAt(4).NewsTitle</a></h4>
+                                <small><a asp-page="/News/NewsDetail" asp-route-id="@Model.ElementAt(4).NewsArticleId" title="">@Model.ElementAt(4).CreatedDate</a></small>
                                 <small><a href="blog-author.html" title="">@Model.ElementAt(4).AccountName</a></small>
                             </div><!-- end meta -->
                         </div><!-- end shadow-desc -->
