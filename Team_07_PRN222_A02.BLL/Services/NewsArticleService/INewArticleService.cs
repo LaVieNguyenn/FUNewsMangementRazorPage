@@ -1,4 +1,4 @@
-﻿using Team_07_PRN222_A02.BLL.DTOs;
+using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.DAL.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +13,8 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
         Task UpdateNewsAsync(NewsArticleUpdateDTO newsArticle);
         Task<NewsArticleDTO> GetNewsAsyncById(int id);
         Task DeleteNewsAsync(int id);
+        Task<IEnumerable<TagDTO>> GetAllTagsAsync();
+
         Task<List<NewsArticleDTO>> GetNewsByAuthorIdAsync(int authorId);
     }
 }
