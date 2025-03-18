@@ -114,8 +114,7 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
 
         public async Task<NewsArticleDTO> GetNewsAsyncById(int id)
         {
-            var news = await _unitOfWork.NewsArticleRepository
-                .GetByIdAsync(id);
+            var news = await _unitOfWork.NewsArticleRepository.GetByIdAsync(id);
             return new NewsArticleDTO
             {
                 NewsArticleId = id,
@@ -131,5 +130,23 @@ namespace Team_07_PRN222_A02.BLL.Services.NewsArticleService
                 Tags = news.Tags,
             };
         }
+
+        public async Task<IEnumerable<TagDTO>> GetAllTagsAsync()
+        {
+            if (_unitOfWork.TagRepository == null)
+            {
+                throw new NullReferenceException("TagRepository chưa được khởi tạo!");
+            }
+
+            var tags = await _unitOfWork.TagRepository.GetAllTagsAsync();
+            if (tags == null)
+            {
+                return new List<TagDTO>();
+            }
+
+            return _mapper.Map<List<TagDTO>>(tags);
+        }
+
+
     }
 }
