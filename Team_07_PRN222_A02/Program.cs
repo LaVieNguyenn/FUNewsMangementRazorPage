@@ -48,6 +48,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ITagRepository,TagRepository>();
 
             builder.Services.AddScoped<INewsRepository, NewRepository>();
             builder.Services.AddScoped<INewArticleService, NewArticleService>();
