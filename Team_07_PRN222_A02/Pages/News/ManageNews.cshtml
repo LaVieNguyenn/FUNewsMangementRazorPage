@@ -68,6 +68,16 @@
                         }
                     </select>
                 </div>
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Tags</label>
+                    <select class="form-control form-control-lg" asp-for="NewArticle.TagId" multiple required>
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <option value="@tag.TagId">@tag.TagName</option>
+                        }
+                    </select>
+                </div>
+
 
                 <button type="submit" class="btn btn-success btn-lg w-100">Add News</button>
             </form>
