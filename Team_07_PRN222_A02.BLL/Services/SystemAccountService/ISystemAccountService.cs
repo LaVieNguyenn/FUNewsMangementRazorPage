@@ -24,6 +24,7 @@ namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
         Task<SystemAccountDTO> GetAccountByIdAsync(int id);
         Task<bool> DeleteAccountAsync(int accountId);
         Task<bool> CreateAccountAsync(SystemAccountDTOAdd model);
+        Task<SystemAccountDTO> GetCurrentUserProfileAsync(string email);
 
 
     }
