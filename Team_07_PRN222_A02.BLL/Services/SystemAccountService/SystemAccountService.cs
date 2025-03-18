@@ -4,16 +4,19 @@
     using Team_07_PRN222_A02.DAL.UnitOfWork;
     using Microsoft.Extensions.Configuration;
     using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
     namespace Team_07_PRN222_A02.BLL.Services.SystemAccountService
     {
         public class SystemAccountService : ISystemAccountService
         {
+            private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private SystemAccount Admin = new SystemAccount();
-            public SystemAccountService(IUnitOfWork unitOfWork, IConfiguration configuration)
+            public SystemAccountService(IUnitOfWork unitOfWork, IConfiguration configuration, IMapper mapper)
             {
                 _unitOfWork = unitOfWork;
+                _mapper = mapper;
                 this.Admin.AccountName = configuration["AdminAccount:AccountName"]!;
                 this.Admin.AccountEmail = configuration["AdminAccount:Email"]!;
                 this.Admin.AccountPassword = configuration["AdminAccount:Password"]!;
@@ -54,21 +57,11 @@
                 await _unitOfWork.AccountRepository.UpdateAccountAsync(account);
                 await _unitOfWork.SaveChangesAsync();
             }
-            public async Task<SystemAccountDTO> GetAccountByIdAsync(int id)
-            {
-                var account = await _unitOfWork.AccountRepository.GetByIdAsync(id);
-                if (account == null)
-                {
-                    return null;
-                }
-                return new SystemAccountDTO
-                {
-                    AccountID = account.AccountId,
-                    AccountName = account.AccountName,
-                    AccountEmail = account.AccountEmail,
-                    AccountRole = account.AccountRole,
-                };
-            }
+        public async Task<SystemAccountDTO?> GetAccountByIdAsync(int id)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(id);
+            return account == null ? null : _mapper.Map<SystemAccountDTO>(account);
+        }
 
         public async Task<bool> UpdateAccountAsync(SystemAccountDTO model)
         {
@@ -99,20 +92,10 @@
                 return false;
             }
         }
-        public async Task<SystemAccountDTO> GetCurrentUserProfileAsync(string email)
+        public async Task<SystemAccountDTO?> GetCurrentUserProfileAsync(string email)
         {
             var account = await _unitOfWork.AccountRepository.GetAccountByEmailAsync(email);
-            if (account == null)
-            {
-                return null;
-            }
-            return new SystemAccountDTO
-            {
-                AccountID = account.AccountId,
-                AccountName = account.AccountName,
-                AccountEmail = account.AccountEmail,
-                AccountRole = account.AccountRole
-            };
+            return account == null ? null : _mapper.Map<SystemAccountDTO>(account);
         }
 
         Task ISystemAccountService.DeleteAccount(int accountId)
