@@ -1,8 +1,9 @@
-﻿using Team_07_PRN222_A02.DAL.Models;
+using Team_07_PRN222_A02.DAL.Models;
 using Team_07_PRN222_A02.DAL.Repositories.AccountRepository;
 using Team_07_PRN222_A02.DAL.Repositories.CategoryRepository;
 using Team_07_PRN222_A02.DAL.Repositories.NewsRepository;
 using Team_07_PRN222_A02.DAL.Repositories.NotificationRepository;
+using Team_07_PRN222_A02.DAL.Repositories.TagRepository;
 
 namespace Team_07_PRN222_A02.DAL.UnitOfWork
 {
@@ -14,11 +15,25 @@ namespace Team_07_PRN222_A02.DAL.UnitOfWork
         private INewsRepository? _newArticleRepository;
         private ICategoryRepository? _categoryRepository;
         private INotificationRepository? _notificationRepository;
+        private ITagRepository? _tagRepository;
+
         private bool disposed = false;
         public UnitOfWork(FunewsManagementContext context)
         {
             _context = context;
         }
+        public ITagRepository TagRepository
+        {
+            get
+            {
+                if (_tagRepository == null)
+                {
+                    _tagRepository = new TagRepository(_context);
+                }
+                return _tagRepository;
+            }
+        }
+
         public IAccountRepository AccountRepository
         {
             get
