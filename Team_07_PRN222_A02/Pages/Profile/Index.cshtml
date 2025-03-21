@@ -60,48 +60,20 @@ else
         </div>
     </div>
 </div>
-
 <!-- Modal View News History -->
-<div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">📰 News History</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Created Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="newsHistoryTable">
-                        <tr>
-                            <td colspan="3" class="text-center">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal News Detail -->
 <div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">📖 News Details</h5>
+                <h5 class="modal-title" id="newsTitle">News Title</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><strong>Title:</strong> <span id="newsTitle"></span></p>
-                <p><strong>Created Date:</strong> <span id="newsCreatedDate"></span></p>
-                <hr>
-                <p id="newsContent"></p>
+                <p><strong>Published:</strong> <span id="newsCreatedDate"></span></p>
+                <div id="newsContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -119,80 +91,81 @@ else
         document.getElementById('editAccountName').value = accountName;
         document.getElementById('editAccountEmail').value = accountEmail;
 
-        var editModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
-        editModal.show();
+        var modalElement = document.getElementById('editProfileModal');
+        if (modalElement) {
+            var editModal = new bootstrap.Modal(modalElement);
+            editModal.show();
+        }
     }
 
-    document.getElementById("editProfileForm").addEventListener("submit", async function (event) {
+    // Bắt sự kiện submit của form cập nhật profile
+    document.getElementById("editProfileForm")?.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         const formData = new FormData(this);
-        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
-
-        if (!tokenElement) {
-            alert("⚠ Error: Missing verification token!");
-            return;
+        const tokenElement = document.querySelector("input[name='__RequestVerificationToken']");
+        if (tokenElement) {
+            formData.append("__RequestVerificationToken", tokenElement.value);
         }
 
         try {
-            const response = await fetch("/Profile/Index?handler=SaveProfile", {
+            const response = await fetch("?handler=SaveProfile", {
                 method: "POST",
-                headers: { 'RequestVerificationToken': tokenElement.value },
                 body: formData
             });
 
             const result = await response.json();
-            if (result.success) {
-                alert("✅ Profile updated successfully!");
+            if (!response.ok) throw new Error(result.error || "Server response was not OK");
 
-                // Ẩn modal
-                bootstrap.Modal.getInstance(document.getElementById("editProfileModal")).hide();
-
-                // Cập nhật giao diện mà không cần reload
-                document.getElementById("displayAccountName").textContent = formData.get("AccountName");
-            } else {
-                alert("⚠ Update failed: " + result.error);
-            }
+            alert("✅ Profile updated successfully!");
+            bootstrap.Modal.getInstance(document.getElementById("editProfileModal"))?.hide();
+            document.getElementById("displayAccountName").textContent = formData.get("AccountName");
         } catch (error) {
             console.error("❌ Error:", error);
-            alert("⚠ Server error.");
+            alert("⚠ Update failed: " + error.message);
         }
     });
 
-    function loadNewsHistory() {
-        fetch('/Profile/Index?handler=LoadNewsHistory')
-            .then(response => response.json())
-            .then(data => {
-                let tableBody = document.getElementById("newsHistoryTable");
-                tableBody.innerHTML = data.length
-                    ? data.map(news => `
-                        <tr>
-                            <td>${news.newsTitle}</td>
-                            <td>${news.createdDate}</td>
-                            <td><button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button></td>
-                        </tr>
-                    `).join("")
-                    : `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
-            })
-            .catch(error => {
-                console.error("❌ Error:", error);
-                document.getElementById("newsHistoryTable").innerHTML = `<tr><td colspan="3" class="text-center">Error loading news.</td></tr>`;
-            });
+        async function loadNewsHistory() {
+        try {
+            const response = await fetch('/Profile/Index?handler=LoadNewsHistory');
+            if (!response.ok) throw new Error("⚠ Failed to load news history");
+
+            const data = await response.json();
+            let tableBody = document.getElementById("newsHistoryTable");
+
+            tableBody.innerHTML = data.length
+                ? data.map(news => `
+                    <tr>
+                        <td>${news.newsTitle}</td>
+                        <td>${news.createdDate}</td>
+                        <td><button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button></td>
+                    </tr>
+                `).join("")
+                : `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
+        } catch (error) {
+            console.error("❌ Error:", error);
+            document.getElementById("newsHistoryTable").innerHTML = `<tr><td colspan="3" class="text-center">Error loading news.</td></tr>`;
+        }
     }
 
-    function openNewsDetail(newsId) {
-        fetch(`/Profile/Index?handler=LoadNewsDetail&newsId=${newsId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById("newsTitle").textContent = data.title;
-                    document.getElementById("newsCreatedDate").textContent = data.createdDate;
-                    document.getElementById("newsContent").innerHTML = data.content;
-                    new bootstrap.Modal(document.getElementById("newsDetailModal")).show();
-                } else {
-                    alert("⚠ " + data.error);
-                }
-            })
-            .catch(error => console.error("❌ Error:", error));
+
+        async function openNewsDetail(newsId) {
+        try {
+            const response = await fetch(`/Profile/Index?handler=LoadNewsDetail&newsId=${newsId}`);
+            if (!response.ok) throw new Error("⚠ Failed to load news details");
+
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error);
+
+            document.getElementById("newsTitle").textContent = data.title;
+            document.getElementById("newsCreatedDate").textContent = data.createdDate;
+            document.getElementById("newsContent").innerHTML = data.content;
+            new bootstrap.Modal(document.getElementById("newsDetailModal")).show();
+        } catch (error) {
+            console.error("❌ Error:", error);
+            alert("⚠ " + error.message);
+        }
     }
+
 </script>
