@@ -72,3 +72,18 @@ C:\Users\PhiHung\Documents\code\DotNet\Demo\FUNewsMangementRazorPage\Team_07_PRN
 C:\Users\PhiHung\Documents\code\DotNet\Demo\FUNewsMangementRazorPage\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.genruntimeconfig.cache
 C:\Users\PhiHung\Documents\code\DotNet\Demo\FUNewsMangementRazorPage\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.DAL.dll
 C:\Users\lehuy\Downloads\FUNewsMangementRazorPage\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.sourcelink.json
+D:\E\New folder\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.deps.json
+D:\E\New folder\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.runtimeconfig.json
+D:\E\New folder\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.dll
+D:\E\New folder\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.csproj.AssemblyReference.cache
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.AssemblyInfoInputs.cache
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.AssemblyInfo.cs
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.csproj.CoreCompileInputs.cache
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.sourcelink.json
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.dll
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\refint\Team_07_PRN222_A02.DAL.dll
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.genruntimeconfig.cache
+D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.DAL.dll

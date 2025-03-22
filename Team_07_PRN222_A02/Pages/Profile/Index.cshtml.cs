@@ -29,7 +29,6 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 : null;
         }
 
-
         public async Task<IActionResult> OnGetAsync()
         {
             var userEmail = GetUserEmail();
@@ -56,20 +55,29 @@ namespace Team_07_PRN222_A02.Pages.Profile
             if (string.IsNullOrEmpty(userEmail))
             {
                 Console.WriteLine("❌ ERROR: User không xác thực!");
-                return new JsonResult(new { success = false, error = "User is not authenticated!" });
+                return new JsonResult(new { success = false, error = "User is not authenticated!" })
+                {
+                    ContentType = "application/json"
+                };
             }
 
             var account = await _accountService.GetAccountByEmailAsync(userEmail);
             if (account == null)
             {
                 Console.WriteLine("❌ ERROR: Không tìm thấy user trong database!");
-                return new JsonResult(new { success = false, error = "User not found!" });
+                return new JsonResult(new { success = false, error = "User not found!" })
+                {
+                    ContentType = "application/json"
+                };
             }
 
             if (string.IsNullOrWhiteSpace(model.AccountName))
             {
                 Console.WriteLine("❌ ERROR: Account Name bị trống!");
-                return new JsonResult(new { success = false, error = "Account Name cannot be empty!" });
+                return new JsonResult(new { success = false, error = "Account Name cannot be empty!" })
+                {
+                    ContentType = "application/json"
+                };
             }
 
             account.AccountName = model.AccountName.Trim();
@@ -78,14 +86,21 @@ namespace Team_07_PRN222_A02.Pages.Profile
             {
                 Console.WriteLine("✅ DEBUG: Đang cập nhật profile vào DB...");
                 await _accountService.UpdateProfileAsync(account);
-                return new JsonResult(new { success = true });
+                return new JsonResult(new { success = true })
+                {
+                    ContentType = "application/json"
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ ERROR: {ex.Message}");
-                return new JsonResult(new { success = false, error = "Error updating profile: " + ex.Message });
+                return new JsonResult(new { success = false, error = "Error updating profile: " + ex.Message })
+                {
+                    ContentType = "application/json"
+                };
             }
         }
+
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
         {
             var userEmail = GetUserEmail();

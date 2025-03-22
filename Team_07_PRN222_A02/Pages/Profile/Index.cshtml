@@ -151,21 +151,26 @@ else
 
 
         async function openNewsDetail(newsId) {
-        try {
-            const response = await fetch(`/Profile/Index?handler=LoadNewsDetail&newsId=${newsId}`);
-            if (!response.ok) throw new Error("⚠ Failed to load news details");
+            try {
+        const response = await fetch("?handler=SaveProfile", {
+            method: "POST",
+            body: formData
+        });
 
-            const data = await response.json();
-            if (!data.success) throw new Error(data.error);
+        const text = await response.text(); // Lấy raw response để debug
+        console.log("🛠 Response Text:", text); // Log ra console để kiểm tra
 
-            document.getElementById("newsTitle").textContent = data.title;
-            document.getElementById("newsCreatedDate").textContent = data.createdDate;
-            document.getElementById("newsContent").innerHTML = data.content;
-            new bootstrap.Modal(document.getElementById("newsDetailModal")).show();
-        } catch (error) {
-            console.error("❌ Error:", error);
-            alert("⚠ " + error.message);
-        }
+        const result = JSON.parse(text); // Chuyển đổi sang JSON thủ công
+        if (!response.ok) throw new Error(result.error || "Server response was not OK");
+
+        alert("✅ Profile updated successfully!");
+        bootstrap.Modal.getInstance(document.getElementById("editProfileModal"))?.hide();
+        document.getElementById("displayAccountName").textContent = formData.get("AccountName");
+    } catch (error) {
+        console.error("❌ Error:", error);
+        alert("⚠ Update failed: " + error.message);
+    }
+
     }
 
 </script>
