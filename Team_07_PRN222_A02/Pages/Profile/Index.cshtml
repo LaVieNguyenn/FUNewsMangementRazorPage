@@ -45,39 +45,21 @@ else
                         <label class="form-label">Name</label>
                         <input type="text" id="editAccountName" name="AccountName" class="form-control" required />
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Email</label>
                         <input type="email" id="editAccountEmail" name="AccountEmail" class="form-control" readonly />
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-success">Save</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
-<!-- Modal View News History -->
-<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newsTitle">News Title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Published:</strong> <span id="newsCreatedDate"></span></p>
-                <div id="newsContent"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <!-- Modal View News History -->
 <div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -106,7 +88,24 @@ else
         </div>
     </div>
 </div>
-
+<!-- Modal View News History -->
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsTitle">News Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Published:</strong> <span id="newsCreatedDate"></span></p>
+                <div id="newsContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Load Bootstrap & jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -128,46 +127,60 @@ else
     }
 
     // Bắt sự kiện submit của form cập nhật profile
-            document.getElementById("editProfileForm").addEventListener("submit", async function (e) {
+       document.getElementById("editProfileForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
-            const nameInput = document.getElementById("editAccountName");
+        const nameInput = document.getElementById("editAccountName");
 
-    if (!nameInput) {
-        console.error("❌ Error: Input 'editAccountName' not found!");
-        return;
-    }
+        if (!nameInput) {
+            console.error("❌ Error: Input field not found!");
+            return;
+        }
 
-    const formData = {
-        AccountName: nameInput.value
-    };
+        const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        const payload = {
+            AccountName: nameInput.value  // ✅ Chỉ gửi AccountName
+        };
+
+        console.log("📤 DEBUG: Payload gửi lên", payload); // Kiểm tra payload trước khi gửi
+
         try {
             const response = await fetch("?handler=SaveProfile", {
                 method: "POST",
-                body: JSON.stringify(formData),
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
-                }
+                    "X-Requested-With": "XMLHttpRequest",
+                    "RequestVerificationToken": antiForgeryToken
+                },
+                body: JSON.stringify(payload)
             });
 
-            if (!response.ok) throw new Error("❌ Server returned an error!");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "❌ Server returned an error!");
+            }
 
             const result = await response.json();
-            if (!result.success) throw new Error(result.error || "Unknown error");
+            console.log("✅ DEBUG: Kết quả từ server:", result);
 
-            alert("✅ Profile updated successfully!");
+            if (!result.success) throw new Error(result.error || "❌ Cập nhật thất bại!");
+
+            alert("✅ Profile cập nhật thành công!");
+            window.location.reload();
         } catch (error) {
-            console.error("❌ Error:", error);
-            alert("⚠ Update failed: " + error.message);
+            console.error("❌ ERROR:", error);
+            alert("⚠ Cập nhật thất bại: " + error.message);
         }
     });
 
 
-    async function loadNewsHistory() {
+            async function loadNewsHistory() {
         try {
-            const response = await fetch('?handler=LoadNewsHistory'); // Sửa URL
+            const response = await fetch('?handler=LoadNewsHistory');
             const result = await response.json();
+
+            console.log("🔍 Debug API Response:", result);
 
             if (!result.success) throw new Error(result.error || "Unknown error");
 
@@ -182,14 +195,15 @@ else
             result.data.forEach(news => {
                 let row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${news.newsTitle}</td>
-                    <td>${news.createdDate}</td>
-                    <td><button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button></td>
+                    <td>${news.newsTitle || 'N/A'}</td>
+                    <td>${news.createdDate || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button>
+                    </td>
                 `;
                 tableBody.appendChild(row);
             });
 
-            // Hiển thị modal
             var modal = new bootstrap.Modal(document.getElementById("newsHistoryModal"));
             modal.show();
         } catch (error) {
@@ -212,7 +226,13 @@ else
             document.getElementById("newsTitle").textContent = result.title;
             document.getElementById("newsCreatedDate").textContent = result.createdDate;
             document.getElementById("newsContent").innerHTML = result.content;
-
+                document.addEventListener("hidden.bs.modal", function () {
+        document.body.classList.remove("modal-open");
+        let backdrop = document.querySelector(".modal-backdrop");
+        if (backdrop) {
+            backdrop.remove();
+        }
+    });
             // Hiển thị modal
             var modal = new bootstrap.Modal(document.getElementById("newsDetailModal"));
             modal.show();

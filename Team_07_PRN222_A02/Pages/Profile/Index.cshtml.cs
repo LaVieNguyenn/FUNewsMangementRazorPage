@@ -1,12 +1,13 @@
-﻿using Azure.Core;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text.Json;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
-
+using System.Text.Json;
+using AutoMapper;
 
 namespace Team_07_PRN222_A02.Pages.Profile
 {
@@ -14,11 +15,13 @@ namespace Team_07_PRN222_A02.Pages.Profile
     {
         private readonly ISystemAccountService _accountService;
         private readonly INewArticleService _newsService;
+        private readonly IMapper _mapper;
 
-        public IndexModel(ISystemAccountService accountService, INewArticleService newsService)
+        public IndexModel(ISystemAccountService accountService, INewArticleService newsService, IMapper mapper)
         {
             _accountService = accountService;
             _newsService = newsService;
+            _mapper = mapper;
         }
 
         public SystemAccountDTO Profile { get; set; }
@@ -47,7 +50,10 @@ namespace Team_07_PRN222_A02.Pages.Profile
             return Page();
         }
 
+        [BindProperty]
+        public SystemAccountDTO InputProfile { get; set; } = new SystemAccountDTO();
 
+        [HttpPost]
         public async Task<IActionResult> OnPostSaveProfileAsync()
         {
             using var reader = new StreamReader(Request.Body);
@@ -66,7 +72,6 @@ namespace Team_07_PRN222_A02.Pages.Profile
         }
 
 
-
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
         {
             var userEmail = GetUserEmail();
@@ -82,13 +87,20 @@ namespace Team_07_PRN222_A02.Pages.Profile
             }
 
             var newsList = await _newsService.GetNewsByAuthorIdAsync(account.AccountId);
-
             if (newsList == null || newsList.Count == 0)
             {
                 return new JsonResult(new { success = true, data = new List<NewsArticleDTO>() });
             }
 
-            return new JsonResult(new { success = true, data = newsList });
+            // Đảm bảo mỗi tin tức có ID
+            var data = newsList.Select(n => new
+            {
+                newsArticleId = n.NewsArticleId, // Đảm bảo ID có dữ liệu
+                newsTitle = n.NewsTitle ?? "No Title",
+                createdDate = n.CreatedDate.ToString("yyyy-MM-dd HH:mm")
+            }).ToList();
+
+            return new JsonResult(new { success = true, data });
         }
 
 
@@ -105,13 +117,16 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return new JsonResult(new { success = false, error = "News not found!" });
             }
 
+            Console.WriteLine($"📜 DEBUG: Loaded News ID {newsId} - {news.NewsTitle}");
+
             return new JsonResult(new
             {
                 success = true,
-                title = news.NewsTitle,
+                title = news.NewsTitle ?? "(No Title)",  // ✅ Đảm bảo không bị null
                 createdDate = news.CreatedDate.ToString("yyyy-MM-dd HH:mm"),
-                content = news.NewsContent
+                content = news.NewsContent ?? "(No Content)"  // ✅ Đảm bảo không bị null
             });
         }
+
     }
 }
