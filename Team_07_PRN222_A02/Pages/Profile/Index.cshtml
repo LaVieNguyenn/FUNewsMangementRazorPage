@@ -78,6 +78,35 @@ else
         </div>
     </div>
 </div>
+<!-- Modal View News History -->
+<div class="modal fade" id="newsHistoryModal" tabindex="-1" aria-labelledby="newsHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">News History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Published Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="newsHistoryTableBody">
+                        <tr><td colspan="3" class="text-center">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Load Bootstrap & jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -99,78 +128,97 @@ else
     }
 
     // Bắt sự kiện submit của form cập nhật profile
-    document.getElementById("editProfileForm")?.addEventListener("submit", async function (event) {
-        event.preventDefault();
+            document.getElementById("editProfileForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-        const formData = new FormData(this);
-        const tokenElement = document.querySelector("input[name='__RequestVerificationToken']");
-        if (tokenElement) {
-            formData.append("__RequestVerificationToken", tokenElement.value);
-        }
+            const nameInput = document.getElementById("editAccountName");
 
+    if (!nameInput) {
+        console.error("❌ Error: Input 'editAccountName' not found!");
+        return;
+    }
+
+    const formData = {
+        AccountName: nameInput.value
+    };
         try {
             const response = await fetch("?handler=SaveProfile", {
                 method: "POST",
-                body: formData
+                body: JSON.stringify(formData),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                }
             });
 
+            if (!response.ok) throw new Error("❌ Server returned an error!");
+
             const result = await response.json();
-            if (!response.ok) throw new Error(result.error || "Server response was not OK");
+            if (!result.success) throw new Error(result.error || "Unknown error");
 
             alert("✅ Profile updated successfully!");
-            bootstrap.Modal.getInstance(document.getElementById("editProfileModal"))?.hide();
-            document.getElementById("displayAccountName").textContent = formData.get("AccountName");
         } catch (error) {
             console.error("❌ Error:", error);
             alert("⚠ Update failed: " + error.message);
         }
     });
 
-        async function loadNewsHistory() {
+
+    async function loadNewsHistory() {
         try {
-            const response = await fetch('/Profile/Index?handler=LoadNewsHistory');
-            if (!response.ok) throw new Error("⚠ Failed to load news history");
+            const response = await fetch('?handler=LoadNewsHistory'); // Sửa URL
+            const result = await response.json();
 
-            const data = await response.json();
-            let tableBody = document.getElementById("newsHistoryTable");
+            if (!result.success) throw new Error(result.error || "Unknown error");
 
-            tableBody.innerHTML = data.length
-                ? data.map(news => `
-                    <tr>
-                        <td>${news.newsTitle}</td>
-                        <td>${news.createdDate}</td>
-                        <td><button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button></td>
-                    </tr>
-                `).join("")
-                : `<tr><td colspan="3" class="text-center">No news found.</td></tr>`;
+            let tableBody = document.getElementById("newsHistoryTableBody");
+            tableBody.innerHTML = ""; // Xóa dữ liệu cũ
+
+            if (result.data.length === 0) {
+                tableBody.innerHTML = <tr><td colspan="3" class="text-center">No news found.</td></tr>;
+                return;
+            }
+
+            result.data.forEach(news => {
+                let row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${news.newsTitle}</td>
+                    <td>${news.createdDate}</td>
+                    <td><button class="btn btn-primary" onclick="openNewsDetail(${news.newsArticleId})">📖 View</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Hiển thị modal
+            var modal = new bootstrap.Modal(document.getElementById("newsHistoryModal"));
+            modal.show();
         } catch (error) {
             console.error("❌ Error:", error);
-            document.getElementById("newsHistoryTable").innerHTML = `<tr><td colspan="3" class="text-center">Error loading news.</td></tr>`;
+            document.getElementById("newsHistoryTableBody").innerHTML =
+                <tr><td colspan="3" class="text-center text-danger">⚠ Error loading news.</td></tr>;
         }
     }
 
-
         async function openNewsDetail(newsId) {
-            try {
-        const response = await fetch("?handler=SaveProfile", {
-            method: "POST",
-            body: formData
-        });
+        try {
+            const response = await fetch(?handler=LoadNewsDetail&newsId=${newsId});
 
-        const text = await response.text(); // Lấy raw response để debug
-        console.log("🛠 Response Text:", text); // Log ra console để kiểm tra
+            if (!response.ok) throw new Error("❌ Server response was not OK");
 
-        const result = JSON.parse(text); // Chuyển đổi sang JSON thủ công
-        if (!response.ok) throw new Error(result.error || "Server response was not OK");
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error || "Unknown error");
 
-        alert("✅ Profile updated successfully!");
-        bootstrap.Modal.getInstance(document.getElementById("editProfileModal"))?.hide();
-        document.getElementById("displayAccountName").textContent = formData.get("AccountName");
-    } catch (error) {
-        console.error("❌ Error:", error);
-        alert("⚠ Update failed: " + error.message);
+            // Cập nhật modal hiển thị chi tiết tin tức
+            document.getElementById("newsTitle").textContent = result.title;
+            document.getElementById("newsCreatedDate").textContent = result.createdDate;
+            document.getElementById("newsContent").innerHTML = result.content;
+
+            // Hiển thị modal
+            var modal = new bootstrap.Modal(document.getElementById("newsDetailModal"));
+            modal.show();
+        } catch (error) {
+            console.error("❌ Error:", error);
+            alert("⚠ Failed to load news detail: " + error.message);
+        }
     }
-
-    }
-
 </script>

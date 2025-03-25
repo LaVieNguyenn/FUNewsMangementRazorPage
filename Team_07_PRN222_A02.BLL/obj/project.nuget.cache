@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "V1FkVpxbDww=",
+  "dgSpecHash": "dNI9JLpwxzA=",
   "success": true,
-  "projectFilePath": "D:\\E\\New folder\\Team_07_PRN222_A02.BLL\\Team_07_PRN222_A02.BLL.csproj",
+  "projectFilePath": "C:\\Users\\Hp\\Source\\Repos\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.BLL\\Team_07_PRN222_A02.BLL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Hp\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\Hp\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

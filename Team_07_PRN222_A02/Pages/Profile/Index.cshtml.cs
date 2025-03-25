@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Text.Json;
 using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
+
 
 namespace Team_07_PRN222_A02.Pages.Profile
 {
@@ -47,59 +48,24 @@ namespace Team_07_PRN222_A02.Pages.Profile
         }
 
 
-        public async Task<IActionResult> OnPostSaveProfileAsync([FromForm] SystemAccountDTO model)
+        public async Task<IActionResult> OnPostSaveProfileAsync()
         {
-            Console.WriteLine($"🔍 DEBUG: Nhận request cập nhật Profile cho {model.AccountEmail} - Tên mới: {model.AccountName}");
+            using var reader = new StreamReader(Request.Body);
+            var requestBody = await reader.ReadToEndAsync();
+            Console.WriteLine($"🔍 DEBUG: Nhận request: {requestBody}");
 
-            var userEmail = GetUserEmail();
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                Console.WriteLine("❌ ERROR: User không xác thực!");
-                return new JsonResult(new { success = false, error = "User is not authenticated!" })
-                {
-                    ContentType = "application/json"
-                };
-            }
+            if (string.IsNullOrEmpty(requestBody))
+                return BadRequest(new { success = false, error = "Empty request body!" });
 
-            var account = await _accountService.GetAccountByEmailAsync(userEmail);
-            if (account == null)
-            {
-                Console.WriteLine("❌ ERROR: Không tìm thấy user trong database!");
-                return new JsonResult(new { success = false, error = "User not found!" })
-                {
-                    ContentType = "application/json"
-                };
-            }
+            var model = JsonSerializer.Deserialize<SystemAccountDTO>(requestBody);
+            if (model == null || string.IsNullOrWhiteSpace(model.AccountName))
+                return BadRequest(new { success = false, error = "Invalid data!" });
 
-            if (string.IsNullOrWhiteSpace(model.AccountName))
-            {
-                Console.WriteLine("❌ ERROR: Account Name bị trống!");
-                return new JsonResult(new { success = false, error = "Account Name cannot be empty!" })
-                {
-                    ContentType = "application/json"
-                };
-            }
-
-            account.AccountName = model.AccountName.Trim();
-
-            try
-            {
-                Console.WriteLine("✅ DEBUG: Đang cập nhật profile vào DB...");
-                await _accountService.UpdateProfileAsync(account);
-                return new JsonResult(new { success = true })
-                {
-                    ContentType = "application/json"
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ ERROR: {ex.Message}");
-                return new JsonResult(new { success = false, error = "Error updating profile: " + ex.Message })
-                {
-                    ContentType = "application/json"
-                };
-            }
+            // Tiếp tục cập nhật dữ liệu
+            return new JsonResult(new { success = true });
         }
+
+
 
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
         {
@@ -116,8 +82,15 @@ namespace Team_07_PRN222_A02.Pages.Profile
             }
 
             var newsList = await _newsService.GetNewsByAuthorIdAsync(account.AccountId);
-            return new JsonResult(newsList ?? new List<NewsArticleDTO>());
+
+            if (newsList == null || newsList.Count == 0)
+            {
+                return new JsonResult(new { success = true, data = new List<NewsArticleDTO>() });
+            }
+
+            return new JsonResult(new { success = true, data = newsList });
         }
+
 
         public async Task<IActionResult> OnGetLoadNewsDetailAsync(int newsId)
         {

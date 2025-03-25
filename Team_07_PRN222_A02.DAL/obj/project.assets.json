@@ -4316,11 +4316,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+      "projectUniqueName": "C:\\Users\\Hp\\Source\\Repos\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
       "projectName": "Team_07_PRN222_A02.DAL",
-      "projectPath": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+      "projectPath": "C:\\Users\\Hp\\Source\\Repos\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
       "packagesPath": "C:\\Users\\Hp\\.nuget\\packages\\",
-      "outputPath": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\obj\\",
+      "outputPath": "C:\\Users\\Hp\\Source\\Repos\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

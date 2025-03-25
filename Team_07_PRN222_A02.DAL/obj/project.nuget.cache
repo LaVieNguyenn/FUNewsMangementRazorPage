@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "777KK1Wo06M=",
+  "dgSpecHash": "WLDgHHNPcu0=",
   "success": true,
-  "projectFilePath": "D:\\E\\New folder\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
+  "projectFilePath": "C:\\Users\\Hp\\Source\\Repos\\FUNewsMangementRazorPage\\Team_07_PRN222_A02.DAL\\Team_07_PRN222_A02.DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Hp\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Hp\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
