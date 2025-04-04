@@ -93,3 +93,19 @@ D:\E\New folder\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.d
 D:\E\New folder\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\refint\Team_07_PRN222_A02.BLL.dll
 D:\E\New folder\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.pdb
 D:\E\New folder\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.BLL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.BLL.deps.json
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.BLL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.BLL.pdb
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.csproj.AssemblyReference.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.AssemblyInfoInputs.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.AssemblyInfo.cs
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.csproj.CoreCompileInputs.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.sourcelink.json
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_.4F8EF657.Up2Date
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\refint\Team_07_PRN222_A02.BLL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\Team_07_PRN222_A02.BLL.pdb
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.BLL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.BLL.dll

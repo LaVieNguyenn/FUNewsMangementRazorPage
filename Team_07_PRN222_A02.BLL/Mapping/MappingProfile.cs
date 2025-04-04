@@ -23,7 +23,10 @@ namespace Team_07_PRN222_A02.BLL.Mapping
             CreateMap<CreateNotificationDTO, Notification>().ReverseMap();
             CreateMap<Tag, TagDTO>().ReverseMap();
 
-            CreateMap<SystemAccount, SystemAccountDTO>().ReverseMap();
+            CreateMap<SystemAccount, SystemAccountDTO>()
+                .ForMember(dest => dest.AccountID, opt => opt.MapFrom(src => src.AccountId));
+            CreateMap<SystemAccountDTO, SystemAccount>()
+                .ForMember(dest => dest.AccountId, opt => opt.Ignore());
         }
     }
 }

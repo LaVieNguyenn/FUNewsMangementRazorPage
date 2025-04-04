@@ -87,3 +87,18 @@ D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\refint\Team_07_PRN222_A0
 D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
 D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.genruntimeconfig.cache
 D:\E\New folder\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.DAL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.deps.json
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.runtimeconfig.json
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\bin\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.csproj.AssemblyReference.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.AssemblyInfoInputs.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.AssemblyInfo.cs
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.csproj.CoreCompileInputs.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.sourcelink.json
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\refint\Team_07_PRN222_A02.DAL.dll
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.pdb
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\Team_07_PRN222_A02.DAL.genruntimeconfig.cache
+D:\Tuan\SWR\New folder (2)\Team_07_PRN222_A02.DAL\obj\Debug\net8.0\ref\Team_07_PRN222_A02.DAL.dll

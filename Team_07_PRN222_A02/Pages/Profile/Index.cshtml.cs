@@ -7,7 +7,6 @@ using Team_07_PRN222_A02.BLL.DTOs;
 using Team_07_PRN222_A02.BLL.Services.NewsArticleService;
 using Team_07_PRN222_A02.BLL.Services.SystemAccountService;
 using System.Text.Json;
-using AutoMapper;
 
 namespace Team_07_PRN222_A02.Pages.Profile
 {
@@ -15,13 +14,11 @@ namespace Team_07_PRN222_A02.Pages.Profile
     {
         private readonly ISystemAccountService _accountService;
         private readonly INewArticleService _newsService;
-        private readonly IMapper _mapper;
 
-        public IndexModel(ISystemAccountService accountService, INewArticleService newsService, IMapper mapper)
+        public IndexModel(ISystemAccountService accountService, INewArticleService newsService)
         {
             _accountService = accountService;
             _newsService = newsService;
-            _mapper = mapper;
         }
 
         public SystemAccountDTO Profile { get; set; }
@@ -50,10 +47,6 @@ namespace Team_07_PRN222_A02.Pages.Profile
             return Page();
         }
 
-        [BindProperty]
-        public SystemAccountDTO InputProfile { get; set; } = new SystemAccountDTO();
-
-        [HttpPost]
         public async Task<IActionResult> OnPostSaveProfileAsync()
         {
             using var reader = new StreamReader(Request.Body);
@@ -64,13 +57,32 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return BadRequest(new { success = false, error = "Empty request body!" });
 
             var model = JsonSerializer.Deserialize<SystemAccountDTO>(requestBody);
-            if (model == null || string.IsNullOrWhiteSpace(model.AccountName))
-                return BadRequest(new { success = false, error = "Invalid data!" });
+            Console.WriteLine($"🔍 DEBUG: Dữ liệu deserialize: AccountName = {model?.AccountName}, AccountEmail = {model?.AccountEmail}, AccountId = {model?.AccountID}");
 
-            // Tiếp tục cập nhật dữ liệu
-            return new JsonResult(new { success = true });
+            if (model == null || string.IsNullOrWhiteSpace(model.AccountName) || string.IsNullOrWhiteSpace(model.AccountEmail))
+                return BadRequest(new { success = false, error = "Invalid or incomplete data!" });
+
+            var userEmail = GetUserEmail();
+            if (string.IsNullOrEmpty(userEmail))
+                return StatusCode(401, new { success = false, error = "User is not authenticated!" });
+
+            try
+            {
+                model.AccountEmail = userEmail; // Giữ email không đổi
+                Console.WriteLine($"🔍 DEBUG: Trước khi cập nhật: AccountName = {model.AccountName}, AccountEmail = {model.AccountEmail}, AccountId = {model.AccountID}");
+
+                var isUpdated = await _accountService.UpdateAccountAsync(model);
+
+
+                Console.WriteLine("🔍 DEBUG: Cập nhật thành công");
+                return new JsonResult(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error updating profile: {ex.Message}");
+                return BadRequest(new { success = false, error = ex.Message });
+            }
         }
-
 
         public async Task<IActionResult> OnGetLoadNewsHistoryAsync()
         {
@@ -87,20 +99,13 @@ namespace Team_07_PRN222_A02.Pages.Profile
             }
 
             var newsList = await _newsService.GetNewsByAuthorIdAsync(account.AccountId);
+
             if (newsList == null || newsList.Count == 0)
             {
                 return new JsonResult(new { success = true, data = new List<NewsArticleDTO>() });
             }
 
-            // Đảm bảo mỗi tin tức có ID
-            var data = newsList.Select(n => new
-            {
-                newsArticleId = n.NewsArticleId, // Đảm bảo ID có dữ liệu
-                newsTitle = n.NewsTitle ?? "No Title",
-                createdDate = n.CreatedDate.ToString("yyyy-MM-dd HH:mm")
-            }).ToList();
-
-            return new JsonResult(new { success = true, data });
+            return new JsonResult(new { success = true, data = newsList });
         }
 
 
@@ -117,16 +122,13 @@ namespace Team_07_PRN222_A02.Pages.Profile
                 return new JsonResult(new { success = false, error = "News not found!" });
             }
 
-            Console.WriteLine($"📜 DEBUG: Loaded News ID {newsId} - {news.NewsTitle}");
-
             return new JsonResult(new
             {
                 success = true,
-                title = news.NewsTitle ?? "(No Title)",  // ✅ Đảm bảo không bị null
+                title = news.NewsTitle,
                 createdDate = news.CreatedDate.ToString("yyyy-MM-dd HH:mm"),
-                content = news.NewsContent ?? "(No Content)"  // ✅ Đảm bảo không bị null
+                content = news.NewsContent
             });
         }
-
     }
 }
